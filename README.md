@@ -1,1 +1,2 @@
-python -m http.server
+- run as: `python -m http.server`
+- framework: Phaser 3

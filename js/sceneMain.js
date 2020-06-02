@@ -19,13 +19,13 @@ class SceneMain extends Phaser.Scene {
         }
 
         this.cameras.main.setBackgroundColor('#008100');
-        this.aGrid = new AlignGrid(gridConfig);
-        this.aGrid.showNumbers();
+        this.grid = new AlignGrid(gridConfig);
+        this.grid.showNumbers();
 
         // render railway
         rails.forEach(rail => {
             const rimg = this.add.image(0, 0, 'rails', rail.type).setInteractive();
-            this.aGrid.placeAt(rail.x, rail.y, rimg);
+            this.grid.placeAt(rail.x, rail.y, rimg);
 
             rimg.displayWidth = game.config.width / gridConfig.cols;
             rimg.scaleY = rimg.scaleX;
@@ -53,7 +53,7 @@ class SceneMain extends Phaser.Scene {
 
                 rail.sem.x = rail.sem.pos === semPosition.RIGHT ? rail.x + 1 : rail.x;
                 rail.sem.y = rail.sem.pos === semPosition.TOP ? rail.y - 1 : rail.y;
-                this.aGrid.placeAt(rail.sem.x, rail.sem.y, semimg);
+                this.grid.placeAt(rail.sem.x, rail.sem.y, semimg);
 
                 semimg.displayHeight = game.config.height / gridConfig.rows;
                 semimg.scaleX = semimg.scaleY;
@@ -62,14 +62,14 @@ class SceneMain extends Phaser.Scene {
 
         // render train
         this.train = this.add.sprite(0, 0, 'train');
-        this.aGrid.placeAt(2, 2, this.train);
+        this.grid.placeAt(2, 2, this.train);
 
         this.train.displayHeight = game.config.height / gridConfig.rows;
         this.train.scaleX = this.train.scaleY;
     }
 
     update() {
-        const trainPosition = this.aGrid.getCellCoord(this.train.x, this.train.y);
+        const trainPosition = this.grid.getCellCoord(this.train.x, this.train.y);
 
         const currentRail = rails.find(rail => {
             if (rail.x === trainPosition.x && rail.y === trainPosition.y) {
