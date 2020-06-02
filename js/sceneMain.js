@@ -4,40 +4,37 @@ class SceneMain extends Phaser.Scene {
     }
 
     preload() {
-        for (const rt in railType) {
-            this.load.image(rt, "assets/rails/" + rt.toLowerCase() + ".png");
-        }
+        this.load.image('train', "assets/actions/train.png",);
+        this.load.multiatlas('rails', 'assets/rails.json', 'assets');
         for (const sem in semType) {
             this.load.spritesheet(sem, "assets/semaphores/" + sem.toLowerCase() + ".png", { frameWidth: 100, frameHeight: 300 });
         }
     }
 
     create() {
-        const grid = 20;
-
         const gridConfig = {
-            'scene': this,
-            'cols': grid,
-            'rows': grid
+            scene: this,
+            cols: 20,
+            rows: 20
         }
 
         this.cameras.main.setBackgroundColor('#008100');
         this.aGrid = new AlignGrid(gridConfig);
         this.aGrid.showNumbers();
 
+        // render railway
         rails.forEach(rail => {
-            // render railway
-            const rimg = this.add.image(0, 0, rail.type).setInteractive();
+            const rimg = this.add.image(0, 0, 'rails', rail.type).setInteractive();
             this.aGrid.placeAt(rail.x, rail.y, rimg);
 
-            rimg.displayWidth = game.config.width / grid;
+            rimg.displayWidth = game.config.width / gridConfig.cols;
             rimg.scaleY = rimg.scaleX;
 
-            rimg.isSelected = false;
+            rail.isSelected = false;
 
             rimg.on('pointerdown', () => {
-                rimg.isSelected ? rimg.clearTint() : rimg.setTint(0xaaaaaa);
-                rimg.isSelected = !rimg.isSelected;
+                rail.isSelected ? rimg.clearTint() : rimg.setTint(0xaaaaaa);
+                rail.isSelected = !rail.isSelected;
             });
 
             // render semaphore
@@ -58,11 +55,46 @@ class SceneMain extends Phaser.Scene {
                 rail.sem.y = rail.sem.pos === semPosition.TOP ? rail.y - 1 : rail.y;
                 this.aGrid.placeAt(rail.sem.x, rail.sem.y, semimg);
 
-                semimg.displayHeight = game.config.height / grid;
+                semimg.displayHeight = game.config.height / gridConfig.rows;
                 semimg.scaleX = semimg.scaleY;
             }
         });
+
+        // render train
+        this.train = this.add.sprite(0, 0, 'train');
+        this.aGrid.placeAt(2, 2, this.train);
+
+        this.train.displayHeight = game.config.height / gridConfig.rows;
+        this.train.scaleX = this.train.scaleY;
     }
 
-    update() { }
+    update() {
+        const trainPosition = this.aGrid.getCellCoord(this.train.x, this.train.y);
+
+        const currentRail = rails.find(rail => {
+            if (rail.x === trainPosition.x && rail.y === trainPosition.y) {
+                return true;
+            }
+        });
+
+        // if train is on rail and rail is selected, continue movement
+        if (currentRail && currentRail.type && currentRail.isSelected) {
+            switch (currentRail.type) {
+                case (railType.HORIZONTAL):
+                    this.train.x += 2;
+                    break;
+                case (railType.VERTICAL): {
+                    this.train.y += 2;
+                    break;
+                }
+                case (railType.LB): {
+                    this.train.x += 1;
+                    this.train.y += 1;
+                    break;
+                }
+                default:
+                    break;
+            }
+        }
+    }
 }

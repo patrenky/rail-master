@@ -1,6 +1,7 @@
 const railType = {
     HORIZONTAL: 'HORIZONTAL',
-    VERTICAL: 'VERTICAL'
+    VERTICAL: 'VERTICAL',
+    LB: 'LB'
 };
 
 const semType = {
@@ -17,7 +18,8 @@ const rails = [
     {
         x: 2,
         y: 2,
-        type: railType.HORIZONTAL
+        type: railType.HORIZONTAL,
+        final: true
     },
     {
         x: 3,
@@ -85,6 +87,11 @@ const rails = [
     },
     {
         x: 15,
+        y: 2,
+        type: railType.LB
+    },
+    {
+        x: 15,
         y: 3,
         type: railType.VERTICAL
     },
@@ -120,6 +127,7 @@ const rails = [
     {
         x: 15,
         y: 9,
-        type: railType.VERTICAL
+        type: railType.VERTICAL,
+        final: true
     },
 ];
