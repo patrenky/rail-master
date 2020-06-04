@@ -52,6 +52,11 @@ const trains = [
     }
 ];
 
+const gridToPx = grid_number => {
+    const tile_width = 16;
+    return (grid_number * tile_width + tile_width / 2);
+}
+
 
 class SceneMain extends Phaser.Scene {
     constructor() {
@@ -71,11 +76,6 @@ class SceneMain extends Phaser.Scene {
         // for (const sem in semType) {
         //     this.load.spritesheet(sem, "assets/semaphores/" + sem.toLowerCase() + ".png", { frameWidth: 100, frameHeight: 300 });
         // }
-    }
-
-    gridToPx(grid_number) {
-        const tile_width = 16;
-        return (grid_number * tile_width + tile_width / 2);
     }
 
     create() {
@@ -102,7 +102,7 @@ class SceneMain extends Phaser.Scene {
             const semPositionY = sem.position === semPosition.ABOVE ? sem.y - 1 : sem.y;
             const semStateColor = sem.state === semState.GO ? 'semGreen' : 'semRed';
 
-            const semImg = this.add.sprite(this.gridToPx(semPositionX), this.gridToPx(semPositionY), semStateColor).setInteractive();
+            const semImg = this.add.sprite(gridToPx(semPositionX), gridToPx(semPositionY), semStateColor).setInteractive({ useHandCursor: true });
             semImg.displayWidth = game.config.width / gridConfig.cols;
             semImg.scaleY = semImg.scaleX;
 
@@ -142,13 +142,13 @@ class SceneMain extends Phaser.Scene {
         // render trains and their paths
         trains.forEach(train => {
             const trainSelector = train.trainSelector;
-            const path = new Phaser.Curves.Path(this.gridToPx(train.startPosition.x), this.gridToPx(train.startPosition.y));
+            const path = new Phaser.Curves.Path(gridToPx(train.startPosition.x), gridToPx(train.startPosition.y));
 
             train.pathPositions.forEach(position => {
-                path.lineTo(this.gridToPx(position.x), this.gridToPx(position.y));
+                path.lineTo(gridToPx(position.x), gridToPx(position.y));
             });
 
-            this[trainSelector] = this.add.follower(path, this.gridToPx(train.startPosition.x), this.gridToPx(train.startPosition.y), 'train');
+            this[trainSelector] = this.add.follower(path, gridToPx(train.startPosition.x), gridToPx(train.startPosition.y), 'train');
             this[trainSelector].displayHeight = game.config.height / gridConfig.rows;
             this[trainSelector].scaleX = this[trainSelector].scaleY;
 
