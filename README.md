@@ -1,2 +1,3 @@
 - run as: `python -m http.server`
 - framework: Phaser 3
+- program for tilemap creation: Tiled (see https://www.youtube.com/watch?v=_fK6MVLPrMA)

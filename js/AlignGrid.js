@@ -44,19 +44,20 @@ class AlignGrid {
         this.graphics.strokePath();
     }
 
-    showNumbers(a = 1) {
-        this.show(a);
+    showNumbers() {
+        this.show();
         var n = 0;
         for (var i = 0; i < this.rows; i++) {
             for (var j = 0; j < this.cols; j++) {
                 if (i == 0 || j == 0) {
                     var numText = this.scene.add.text(0, 0, n, {
-                        color: this.gridColor
+                        color: this.gridColor,
+                        fontSize: '12px'
                     });
                     numText.setOrigin(0.5, 0.5);
                     this.placeAt(j, i, numText);
                     n++;
-                    if (n >= this.rows) {
+                    if (n >= this.cols) {
                         n = 1;
                     }
                 }

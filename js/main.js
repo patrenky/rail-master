@@ -6,11 +6,10 @@ if (isMobile == -1) {
 
 const config = {
     type: Phaser.AUTO,
-    width: 900, // window.innerWidth - 100,
-    height: 900, // window.innerHeight - 100,
+    width: 960, // window.innerWidth - 100,
+    height: 640, // window.innerHeight - 100,
     parent: 'app-canvas',
     scene: [SceneMain],
-    
 };
 
 if (isMobile != -1) {
