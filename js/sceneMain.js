@@ -23,21 +23,35 @@ const semaphores = [
     }
 ];
 
+const rail_switches = [ 
+    // all switches are numbered in direction from Kurim to Bityska
+    // logic behind names is {station}_{rail: side_left_x - side_right_x - main}_ordering
+    {
+        name: "k_m_1",
+    }
+]
+
 const trains = [
     {
-        trainSelector: 'train1',
-        startPosition: { x: 17, y: 8 },
+        trainSelector: 'ruske_drahy',
+        startPosition: { x: 29, y: 24 },
         pathPositions: [
-            { x: 17, y: 2 },
-            { x: 2, y: 2 },
-            { x: 2, y: 5 },
-            { x: 5, y: 5 },
-            { x: 5, y: 2 },
-            { x: 17, y: 2 },
-            { x: 17, y: 8 },
+            { x: 29, y: 24 },
+            { x: 8, y: 24 },
+            { x: 8, y: 12 },
+            { x: 11, y: 12 },
+            // prvni vyhybka
+
+            // kurim - odstavna kolej
+            /*{ x: 14, y: 12 },
+            { x: 14, y: 10 },
+            { x: 25, y: 10 },
+            { x: 25, y: 12 },*/
+            // kurim - spodni kolej
+
         ],
     },
-    {
+    /*{
         trainSelector: 'train2',
         startPosition: { x: 11, y: 8 },
         pathPositions: [
@@ -49,7 +63,7 @@ const trains = [
             { x: 11, y: 2 },
             { x: 11, y: 8 },
         ],
-    }
+    }*/
 ];
 
 const gridToPx = grid_number => {
@@ -88,6 +102,7 @@ class SceneMain extends Phaser.Scene {
         const map = this.make.tilemap({ key: 'tilemap' });
         const tileset = map.addTilesetImage('tileset', 'tileset');
 
+        map.createStaticLayer('Rails', tileset);
         map.createStaticLayer('Rails', tileset);
 
         this.cameras.main.setBackgroundColor('#008100');
