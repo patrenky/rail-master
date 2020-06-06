@@ -103,7 +103,6 @@ class SceneMain extends Phaser.Scene {
         const tileset = map.addTilesetImage('tileset', 'tileset');
 
         map.createStaticLayer('Rails', tileset);
-        map.createStaticLayer('Rails', tileset);
 
         this.cameras.main.setBackgroundColor('#008100');
 
