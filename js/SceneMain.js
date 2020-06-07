@@ -320,37 +320,14 @@ class SceneMain extends Phaser.Scene {
 
         // render trains and their paths
         trains.forEach(train => {
-            train.lastReverse = train.startPosition;
-
             const trainSelector = train.trainSelector;
-            const path = new Phaser.Curves.Path(gridToPx(train.startPosition.x), gridToPx(train.startPosition.y));
 
-            this[trainSelector] = this.add.follower(path, gridToPx(train.startPosition.x), gridToPx(train.startPosition.y), 'train').play('train_animation');
+            this[trainSelector] = this.add.sprite(gridToPx(train.startPosition.x), gridToPx(train.startPosition.y), 'train').play('train_animation');
             this[trainSelector].displayHeight = game.config.height / gridConfig.rows * 2;
             this[trainSelector].scaleX = this[trainSelector].scaleY;
-            this[trainSelector].pathColoring = this.add.graphics();
             this[trainSelector].setTint(train.trainColor);
 
-            this.updatePaths();
-
-            this[trainSelector].startFollow({
-                rotateToPath: true,
-                rotationOffset: train.startRotation ? train.startRotation : 0,
-                verticalAdjust: true,
-                duration: 5000,
-                yoyo: true,
-                repeat: -1,
-            });
-
-            // allow pause/resume when clicked on train
-            this[trainSelector].setInteractive({ useHandCursor: true });
-            this[trainSelector].on('pointerdown', () => {
-                // if (this[trainSelector].isFollowing()) {
-                // this[trainSelector].pauseFollow();
-                // } else {
-                this[trainSelector].resumeFollow();
-                // }
-            });
+            this[trainSelector].actualPath = this.getActualPath(train);
         });
 
         // render switches
@@ -368,89 +345,80 @@ class SceneMain extends Phaser.Scene {
 
                 // switch enabled/disabled paths affected by current rail switch
                 paths.forEach(path => {
-                    if (path.route[sw.reversed ? path.route.length - 1 : 0].x === sw.x && path.route[sw.reversed ? path.route.length - 1 : 0].y === sw.y) {
+                    const routeSelector = sw.reversed ? path.route.length - 1 : 0;
+
+                    if (path.route[routeSelector].x === sw.x && path.route[routeSelector].y === sw.y) {
                         path.enabled = !path.enabled;
                     }
                 });
 
                 // re-render paths
-                this.updatePaths();
+                this.renderPaths();
             });
         });
+
+        this.renderPaths();
     }
 
-    updatePaths() {
-        trains.forEach(train => {
-            const trainSelector = train.trainSelector;
+    getActualPath(train) {
+        const trainSelector = train.trainSelector;
 
-            // clear the old path
-            this[trainSelector].path.curves.length = 0;
-            this[trainSelector].path.cacheLengths.length = 0;
+        const foundPath = paths.find(path => {
+            const pathArray = train.reversed ? path.route.reverse() : path.route;
 
-            const newPath = [];
-
-            // last position is train start position
-            // let lastPosition = { x: pxToGrid(this[trainSelector].x), y: pxToGrid(this[trainSelector].y) };
-            let lastPosition = { x: train.startPosition.x, y: train.startPosition.y };
-            newPath.push(lastPosition);
-
-            // find full path for train:
-            // in every lastPosition append array of new positions when path is ENABLED
-            let maxLoop = 10;
-
-            while (true) {
-                const foundPath = paths.find(path => {
-                    if (path.route[0].x === lastPosition.x && path.route[0].y === lastPosition.y) {
-                        if (path.enabled) {
-                            return true;
-                        }
-                    }
-                });
-
-                if (foundPath) {
-                    newPath.push(...foundPath.route);
-                    lastPosition = foundPath.route[foundPath.route.length - 1];
-                } else {
-                    break;
-                }
-
-                maxLoop--;
-                if (maxLoop < 1) {
-                    break;
+            if (pathArray[0].x === pxToGrid(this[trainSelector].x) && pathArray[0].y === pxToGrid(this[trainSelector].y)) {
+                if (path.enabled) {
+                    return true;
                 }
             }
+        });
 
-            newPath.forEach(position => {
-                this[trainSelector].path.lineTo(gridToPx(position.x), gridToPx(position.y));
+        // console.log(foundPath);
+
+        return foundPath;
+    }
+
+    getNextMove(trainSelector) {
+        const actualPosition = { x: pxToGrid(this[trainSelector].x), y: pxToGrid(this[trainSelector].y) };
+        const actualPath = this[trainSelector].actualPath.route;
+
+        const nextMove = {};
+
+        for (let i = 0; i < actualPath.length; i++) {
+            const nextSelector = (i + 1) % actualPath.length;
+
+            // horizontal match -> move on x
+            if (actualPath[i].y === actualPosition.y && actualPath[nextSelector].y === actualPosition.y) {
+                // console.log(`horizontal match ${gridToPx(actualPath[nextSelector].x) - this[trainSelector].x}`);
+                nextMove.x = gridToPx(actualPath[nextSelector].x) - this[trainSelector].x;
+            }
+
+            // vertical match -> move on y
+            else if (actualPath[i].x === actualPosition.x && actualPath[nextSelector].x === actualPosition.x) {
+                // console.log(`vertical match ${gridToPx(actualPath[nextSelector].y) - this[trainSelector].y}`);
+                nextMove.y = gridToPx(actualPath[nextSelector].y) - this[trainSelector].y;
+            }
+
+            if (nextMove.x || nextMove.y) break;
+        }
+
+        return nextMove;
+    }
+
+    renderPaths() {
+        // display enabled/disabled paths (dev/debug)
+        const gdisabled = this.add.graphics();
+        gdisabled.lineStyle(2, hexColor.RED, 1);
+
+        const genabled = this.add.graphics();
+        genabled.lineStyle(2, hexColor.BLUE, 1);
+
+        paths.forEach(path => {
+            const p = new Phaser.Curves.Path(gridToPx(path.route[0].x), gridToPx(path.route[0].y));
+            path.route.forEach(position => {
+                p.lineTo(gridToPx(position.x), gridToPx(position.y));
             });
-
-            // update train final rails
-            train.finalRails = [newPath[0], newPath[newPath.length - 1]];
-
-            // display paths (dev/debug)
-            // this[trainSelector].pathColoring.clear();
-            // this[trainSelector].pathColoring.lineStyle(2, train.trainColor, 1);
-            // this[trainSelector].path.draw(this[trainSelector].pathColoring, 128);
-
-            // update train speed depending on path length
-            // if (this[trainSelector].pathConfig) {
-            //     this[trainSelector].pathConfig.duration = 3000;
-            // }
-
-            // display enabled/disabled paths (dev/debug)
-            const gdisabled = this.add.graphics();
-            gdisabled.lineStyle(2, hexColor.RED, 1);
-
-            const genabled = this.add.graphics();
-            genabled.lineStyle(2, hexColor.BLUE, 1);
-
-            paths.forEach(path => {
-                const p = new Phaser.Curves.Path(gridToPx(path.route[0].x), gridToPx(path.route[0].y));
-                path.route.forEach(position => {
-                    p.lineTo(gridToPx(position.x), gridToPx(position.y));
-                });
-                p.draw(path.enabled ? genabled : gdisabled, 128);
-            });
+            p.draw(path.enabled ? genabled : gdisabled, 128);
         });
     }
 
@@ -458,46 +426,88 @@ class SceneMain extends Phaser.Scene {
         // check whether trains collide with semaphores or final rails
         trains.forEach(train => {
             const trainSelector = train.trainSelector;
-            const trainPosition = this.grid.getCellCoord(this[trainSelector].x, this[trainSelector].y);
+            const trainPosition = { x: pxToGrid(this[trainSelector].x), y: pxToGrid(this[trainSelector].y) };
 
-            // if train is on rail where semaphore is placed
-            const trainOnSemaphore = semaphores.find(sem => {
-                if (sem.x === trainPosition.x && sem.y === trainPosition.y) {
-                    return true;
-                }
-            });
+            // // if train is on rail where semaphore is placed
+            // const trainOnSemaphore = semaphores.find(sem => {
+            //     if (sem.x === trainPosition.x && sem.y === trainPosition.y) {
+            //         return true;
+            //     }
+            // });
 
-            if (trainOnSemaphore && trainOnSemaphore.reversed === train.reversed) {
-                switch (trainOnSemaphore.state) {
-                    case (semState.STOP):
-                        // this[trainSelector].anims.pause(this[trainSelector].anims.currentAnim.frames[0]);
-                        this[trainSelector].pauseFollow();
-                        break;
-                    case (semState.GO): {
-                        // this[trainSelector].anims.play();
-                        this[trainSelector].resumeFollow();
-                        break;
-                    }
-                    default:
-                        break;
+            // if (trainOnSemaphore && trainOnSemaphore.reversed === train.reversed) {
+            //     switch (trainOnSemaphore.state) {
+            //         case (semState.STOP):
+            //             // this[trainSelector].anims.pause(this[trainSelector].anims.currentAnim.frames[0]);
+            //             this[trainSelector].pauseFollow();
+            //             break;
+            //         case (semState.GO): {
+            //             // this[trainSelector].anims.play();
+            //             this[trainSelector].resumeFollow();
+            //             break;
+            //         }
+            //         default:
+            //             break;
+            //     }
+            // }
+
+            // count and execute next move
+            const nextMove = this.getNextMove(trainSelector);
+            const baseMoveStep = 5;
+
+            // horizontal move
+            if (nextMove.x) {
+
+                // train rotation
+                if (nextMove.x < 0) {
+                    // to left
+                } else {
+                    // to right
                 }
+
+                // movement
+                const moveSign = nextMove.x / Math.abs(nextMove.x);
+                const moveStep = Math.abs(nextMove.x) > baseMoveStep ? moveSign * baseMoveStep : nextMove.x;
+                this[trainSelector].x += moveStep;
             }
 
-            // if train is on final rail - reverse train & it's path
-            const trainOnFinalRail = train.finalRails.find(frail => {
-                if (frail.x === trainPosition.x && frail.y === trainPosition.y) {
-                    if (frail.x !== train.lastReverse.x && frail.y !== train.lastReverse.y) {
-                        train.lastReverse = frail;
-                        return true;
-                    }
-                }
-            });
+            // vertical move
+            else if (nextMove.y) {
 
-            if (trainOnFinalRail) {
-                // this[trainSelector].pauseFollow();
-                train.reversed = !train.reversed;
-                console.log(`train is on final rail (${trainOnFinalRail.x}, ${trainOnFinalRail.y}), reverse: ${train.reversed}`);
+                // train rotation
+                if (nextMove.y < 0) {
+                    // to top
+                } else {
+                    // to bottom
+                }
+
+                // movement
+                const moveSign = nextMove.y / Math.abs(nextMove.y);
+                const moveStep = Math.abs(nextMove.y) > baseMoveStep ? moveSign * baseMoveStep : nextMove.y;
+                this[trainSelector].y += moveStep;
             }
+
+            // get next path
+            else {
+                console.log("get next path");
+                this[trainSelector].actualPath = this.getActualPath(train);
+            }
+
+            // // if train is on final rail - reverse train & it's path
+            // const trainOnFinalRail = train.finalRails.find(frail => {
+            //     if (frail.x === trainPosition.x && frail.y === trainPosition.y) {
+            //         if (frail.x !== train.lastReverse.x && frail.y !== train.lastReverse.y) {
+            //             train.lastReverse = frail;
+            //             return true;
+            //         }
+            //     }
+            // });
+
+            // if (trainOnFinalRail) {
+            //     // this[trainSelector].pauseFollow();
+            //     train.reversed = !train.reversed;
+            //     console.log(`train is on final rail (${trainOnFinalRail.x}, ${trainOnFinalRail.y}), reverse: ${train.reversed}`);
+            // }
         });
     }
 }
