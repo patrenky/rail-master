@@ -1,3 +1,13 @@
+const hexColor = {
+    RED: 0xFF0000,
+    BLUE: 0x2859B8,
+    GREEN: 0x008000,
+    YELLOW: 0xFFFF00,
+    SILVER: 0xC0C0C0,
+    PURPLE: 0x7B15B4,
+    ORANGE: 0xFFA500,
+};
+
 const semState = {
     STOP: 'STOP',
     WARN: 'WARN',
@@ -169,7 +179,7 @@ const switches = [
 const trains = [
     {
         trainSelector: 'ruske_drahy',
-        trainColor: 0x2859B8,
+        trainColor: hexColor.ORANGE,
         startPosition: { x: 29, y: 24 },
         startRotation: 90,
         reversed: false,
@@ -229,6 +239,14 @@ const getSwitchSprite = swState => {
     }
 }
 
+const getNextState = (array, actual) => {
+    for (let i = 0; i < array.length; i++) {
+        if (array[i] === actual) {
+            return array[(i + 1) % array.length]
+        }
+    }
+}
+
 
 class SceneMain extends Phaser.Scene {
     constructor() {
@@ -264,8 +282,10 @@ class SceneMain extends Phaser.Scene {
         const map = this.make.tilemap({ key: 'tilemap' });
         const tileset = map.addTilesetImage('tileset', 'tileset');
         map.createStaticLayer('Rails', tileset);
+        map.createStaticLayer('Semaphores', tileset);
+        map.createStaticLayer('Switches', tileset);
 
-        this.cameras.main.setBackgroundColor('#008100');
+        this.cameras.main.setBackgroundColor(hexColor.GREEN);
 
         // show grid (dev/debug)
         this.grid = new AlignGrid(gridConfig);
@@ -285,14 +305,7 @@ class SceneMain extends Phaser.Scene {
 
             semImg.on('pointerdown', () => {
                 // switch semaphore state
-                if (sem.state === semState.GO) {
-                    sem.state = semState.WARN;
-                } else if (sem.state === semState.WARN) {
-                    sem.state = semState.STOP;
-                } else if (sem.state === semState.STOP) {
-                    sem.state = semState.GO;
-                }
-
+                sem.state = getNextState(Object.keys(semState), sem.state);
                 semImg.setTexture(getSemSprite(sem.state));
             });
         });
@@ -350,12 +363,7 @@ class SceneMain extends Phaser.Scene {
 
             swImg.on('pointerdown', () => {
                 // switch rail switch state
-                if (sw.state === spriteDirection.LEFT) {
-                    sw.state = spriteDirection.RIGHT;
-                } else if (sw.state === spriteDirection.RIGHT) {
-                    sw.state = spriteDirection.LEFT;
-                }
-
+                sw.state = getNextState(Object.keys(spriteDirection), sw.state);
                 swImg.setTexture(getSwitchSprite(sw.state));
 
                 // switch enabled/disabled paths affected by current rail switch
@@ -430,18 +438,18 @@ class SceneMain extends Phaser.Scene {
             // }
 
             // display enabled/disabled paths (dev/debug)
-            const gred = this.add.graphics();
-            gred.lineStyle(2, 0xFF0000, 1);
+            const gdisabled = this.add.graphics();
+            gdisabled.lineStyle(2, hexColor.RED, 1);
 
-            const ggreen = this.add.graphics();
-            ggreen.lineStyle(2, 0x2859B8, 1);
+            const genabled = this.add.graphics();
+            genabled.lineStyle(2, hexColor.BLUE, 1);
 
             paths.forEach(path => {
                 const p = new Phaser.Curves.Path(gridToPx(path.route[0].x), gridToPx(path.route[0].y));
                 path.route.forEach(position => {
                     p.lineTo(gridToPx(position.x), gridToPx(position.y));
                 });
-                p.draw(path.enabled ? ggreen : gred, 128);
+                p.draw(path.enabled ? genabled : gdisabled, 128);
             });
         });
     }
