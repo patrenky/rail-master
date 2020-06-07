@@ -420,14 +420,29 @@ class SceneMain extends Phaser.Scene {
             train.finalRails = [newPath[0], newPath[newPath.length - 1]];
 
             // display paths (dev/debug)
-            this[trainSelector].pathColoring.clear();
-            this[trainSelector].pathColoring.lineStyle(2, train.trainColor, 1);
-            this[trainSelector].path.draw(this[trainSelector].pathColoring, 128);
+            // this[trainSelector].pathColoring.clear();
+            // this[trainSelector].pathColoring.lineStyle(2, train.trainColor, 1);
+            // this[trainSelector].path.draw(this[trainSelector].pathColoring, 128);
 
             // update train speed depending on path length
             // if (this[trainSelector].pathConfig) {
             //     this[trainSelector].pathConfig.duration = 3000;
             // }
+
+            // display enabled/disabled paths (dev/debug)
+            const gred = this.add.graphics();
+            gred.lineStyle(2, 0xFF0000, 1);
+
+            const ggreen = this.add.graphics();
+            ggreen.lineStyle(2, 0x2859B8, 1);
+
+            paths.forEach(path => {
+                const p = new Phaser.Curves.Path(gridToPx(path.route[0].x), gridToPx(path.route[0].y));
+                path.route.forEach(position => {
+                    p.lineTo(gridToPx(position.x), gridToPx(position.y));
+                });
+                p.draw(path.enabled ? ggreen : gred, 128);
+            });
         });
     }
 
