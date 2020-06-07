@@ -1,62 +1,154 @@
 const semState = {
     STOP: 'STOP',
+    WARN: 'WARN',
     GO: 'GO'
 };
 
 const spritePosition = {
-    ABOVE: 'ABOVE',
-    RIGHT: 'RIGHT'
+    T: 'T',
+    B: 'B',
+    R: 'R',
+    L: 'L',
+    TR: 'TR',
+    TL: 'TL',
+    BR: 'BR',
+    BL: 'BL',
 };
 
 const semaphores = [
     {
-        x: 19,
+        x: 26,
         y: 24,
+        reversed: false,
         state: semState.STOP,
-        position: spritePosition.ABOVE
+        position: spritePosition.T
+    },
+    {
+        x: 18,
+        y: 24,
+        reversed: true,
+        state: semState.STOP,
+        position: spritePosition.T
     }
 ];
 
-const paths = {
-    29: {
-        24: [
-            {
-                enabled: true,
-                route: [
-                    { x: 29, y: 24 },
-                    { x: 8, y: 24 },
-                    { x: 8, y: 12 },
-                    { x: 11, y: 12 },
-                ]
-            }
+const paths = [
+    {
+        enabled: true,
+        route: [
+            { x: 29, y: 24 },
+            { x: 8, y: 24 },
+            { x: 8, y: 12 },
+            { x: 11, y: 12 },
         ]
     },
-    11: {
-        12: [
-            {
-                enabled: true,
-                route: [
-                    { x: 11, y: 12 },
-                    { x: 14, y: 12 },
-                ]
-            },
-            {
-                enabled: false,
-                route: [
-                    { x: 11, y: 12 },
-                    { x: 11, y: 14 },
-                    { x: 14, y: 14 },
-                ]
-            }
+    {
+        enabled: true,
+        route: [
+            { x: 11, y: 12 },
+            { x: 14, y: 12 },
         ]
-    }
-};
+    },
+    {
+        enabled: false,
+        route: [
+            { x: 11, y: 12 },
+            { x: 11, y: 14 },
+            { x: 14, y: 14 },
+        ]
+    },
+    {
+        enabled: false,
+        route: [
+            { x: 14, y: 12 },
+            { x: 14, y: 10 },
+            { x: 25, y: 10 },
+            { x: 25, y: 12 },
+        ]
+    },
+    {
+        enabled: true,
+        route: [
+            { x: 14, y: 12 },
+            { x: 25, y: 12 },
+        ]
+    },
+    {
+        enabled: true,
+        route: [
+            { x: 14, y: 14 },
+            { x: 25, y: 14 },
+        ]
+    },
+    {
+        enabled: false,
+        route: [
+            { x: 14, y: 14 },
+            { x: 14, y: 16 },
+            { x: 25, y: 16 },
+            { x: 25, y: 14 },
+        ]
+    },
+    {
+        enabled: true,
+        route: [
+            { x: 25, y: 12 },
+            { x: 27, y: 12 },
+        ]
+    },
+    {
+        enabled: false,
+        route: [
+            { x: 25, y: 14 },
+            { x: 27, y: 14 },
+            { x: 27, y: 12 },
+        ]
+    },
+    {
+        enabled: true,
+        route: [
+            { x: 27, y: 12 },
+            { x: 37, y: 12 },
+        ]
+    },
+];
 
 const switches = [
     {
         x: 11,
         y: 12,
-        position: spritePosition.ABOVE
+        reversed: false,
+        position: spritePosition.BL
+    },
+    {
+        x: 14,
+        y: 12,
+        reversed: false,
+        position: spritePosition.TL
+    },
+    {
+        x: 14,
+        y: 14,
+        reversed: false,
+        position: spritePosition.BL
+    },
+    {
+        x: 25,
+        y: 12,
+        reversed: true,
+        position: spritePosition.TL
+    },
+    {
+        x: 25,
+        y: 14,
+        reversed: true,
+        position: spritePosition.BL
+    },
+    {
+        x: 27,
+        y: 12,
+        reversed: true,
+        position: spritePosition.T
     },
 ];
 
@@ -67,12 +159,41 @@ const trains = [
         trainColor: 0x2859B8,
         startPosition: { x: 29, y: 24 },
         startRotation: 90,
+        reversed: false,
     },
 ];
 
 const gridToPx = grid_number => {
     const tile_width = 16;
     return (grid_number * tile_width + tile_width / 2);
+}
+
+const pxToGrid = px => {
+    const tile_width = 16;
+    return Math.floor(px / tile_width);
+}
+
+const getSpriteCoords = (x, y, position) => {
+    switch (position) {
+        case (spritePosition.T):
+            return { x, y: y - 1 };
+        case (spritePosition.B):
+            return { x, y: y + 1 };
+        case (spritePosition.R):
+            return { x: x + 1, y };
+        case (spritePosition.L):
+            return { x: x - 1, y };
+        case (spritePosition.TR):
+            return { x: x + 1, y: y - 1 };
+        case (spritePosition.TL):
+            return { x: x - 1, y: y - 1 };
+        case (spritePosition.BR):
+            return { x: x + 1, y: y + 1 };
+        case (spritePosition.BL):
+            return { x: x - 1, y: y + 1 };
+        default:
+            return { x, y };
+    }
 }
 
 
@@ -83,7 +204,7 @@ class SceneMain extends Phaser.Scene {
 
     preload() {
         this.load.image('tileset', 'assets/tileset.png');
-        this.load.tilemapTiledJSON('tilemap', 'assets/tilemap_extra.json');
+        this.load.tilemapTiledJSON('tilemap', 'assets/tilemap.json');
 
         this.load.image('semRed', 'assets/semaphores/red.png');
         this.load.image('semGreen', 'assets/semaphores/green.png');
@@ -105,7 +226,6 @@ class SceneMain extends Phaser.Scene {
 
         const map = this.make.tilemap({ key: 'tilemap' });
         const tileset = map.addTilesetImage('tileset', 'tileset');
-
         map.createStaticLayer('Rails', tileset);
 
         this.cameras.main.setBackgroundColor('#008100');
@@ -116,11 +236,10 @@ class SceneMain extends Phaser.Scene {
 
         // render semaphores
         semaphores.forEach(sem => {
-            const semPositionX = sem.position === spritePosition.RIGHT ? sem.x + 1 : sem.x;
-            const semPositionY = sem.position === spritePosition.ABOVE ? sem.y - 1 : sem.y;
+            const semPosition = getSpriteCoords(sem.x, sem.y, sem.position);
             const semStateColor = sem.state === semState.GO ? 'semGreen' : 'semRed';
 
-            const semImg = this.add.sprite(gridToPx(semPositionX), gridToPx(semPositionY), semStateColor).setInteractive({ useHandCursor: true });
+            const semImg = this.add.sprite(gridToPx(semPosition.x), gridToPx(semPosition.y), semStateColor).setInteractive({ useHandCursor: true });
             semImg.displayWidth = game.config.width / gridConfig.cols;
             semImg.scaleY = semImg.scaleX;
 
@@ -142,6 +261,8 @@ class SceneMain extends Phaser.Scene {
 
         // render trains and their paths
         trains.forEach(train => {
+            train.lastReverse = train.startPosition;
+
             const trainSelector = train.trainSelector;
             const path = new Phaser.Curves.Path(gridToPx(train.startPosition.x), gridToPx(train.startPosition.y));
 
@@ -161,21 +282,33 @@ class SceneMain extends Phaser.Scene {
                 yoyo: true,
                 repeat: -1,
             });
+
+            // allow pause/resume when clicked on train
+            this[trainSelector].setInteractive({ useHandCursor: true });
+            this[trainSelector].on('pointerdown', () => {
+                // if (this[trainSelector].isFollowing()) {
+                // this[trainSelector].pauseFollow();
+                // } else {
+                this[trainSelector].resumeFollow();
+                // }
+            });
         });
 
         // render switches
         switches.forEach(sw => {
-            const swImg = this.add.sprite(gridToPx(sw.x), gridToPx(sw.y - 1), 'semRed').setInteractive({ useHandCursor: true });
+            const swPosition = getSpriteCoords(sw.x, sw.y, sw.position);
+
+            const swImg = this.add.sprite(gridToPx(swPosition.x), gridToPx(swPosition.y), '').setInteractive({ useHandCursor: true });
             swImg.displayWidth = game.config.width / gridConfig.cols;
             swImg.scaleY = swImg.scaleX;
 
             swImg.on('pointerdown', () => {
                 // switch enabled/disabled paths affected by current rail switch
-                if (paths[sw.x] && paths[sw.x][sw.y]) {
-                    paths[sw.x][sw.y].forEach(path => {
+                paths.forEach(path => {
+                    if (path.route[sw.reversed ? path.route.length - 1 : 0].x === sw.x && path.route[sw.reversed ? path.route.length - 1 : 0].y === sw.y) {
                         path.enabled = !path.enabled;
-                    })
-                }
+                    }
+                });
 
                 // re-render paths
                 this.updatePaths();
@@ -192,25 +325,34 @@ class SceneMain extends Phaser.Scene {
             this[trainSelector].path.cacheLengths.length = 0;
 
             const newPath = [];
+
+            // last position is train start position
+            // let lastPosition = { x: pxToGrid(this[trainSelector].x), y: pxToGrid(this[trainSelector].y) };
             let lastPosition = { x: train.startPosition.x, y: train.startPosition.y };
             newPath.push(lastPosition);
 
             // find full path for train:
             // in every lastPosition append array of new positions when path is ENABLED
+            let maxLoop = 10;
+
             while (true) {
-                if (paths[lastPosition.x] && paths[lastPosition.x][lastPosition.y]) {
-                    const foundPath = paths[lastPosition.x][lastPosition.y].find(possiblePath => {
-                        if (possiblePath.enabled) {
+                const foundPath = paths.find(path => {
+                    if (path.route[0].x === lastPosition.x && path.route[0].y === lastPosition.y) {
+                        if (path.enabled) {
                             return true;
                         }
-                    });
-
-                    if (foundPath) {
-                        newPath.push(...foundPath.route);
-                        lastPosition = foundPath.route[foundPath.route.length - 1];
-                        continue;
                     }
+                });
+
+                if (foundPath) {
+                    newPath.push(...foundPath.route);
+                    lastPosition = foundPath.route[foundPath.route.length - 1];
                 } else {
+                    break;
+                }
+
+                maxLoop--;
+                if (maxLoop < 1) {
                     break;
                 }
             }
@@ -219,28 +361,35 @@ class SceneMain extends Phaser.Scene {
                 this[trainSelector].path.lineTo(gridToPx(position.x), gridToPx(position.y));
             });
 
+            // update train final rails
+            train.finalRails = [newPath[0], newPath[newPath.length - 1]];
 
             // display paths (dev/debug)
             this[trainSelector].pathColoring.clear();
             this[trainSelector].pathColoring.lineStyle(2, train.trainColor, 1);
             this[trainSelector].path.draw(this[trainSelector].pathColoring, 128);
+
+            // update train speed depending on path length
+            // if (this[trainSelector].pathConfig) {
+            //     this[trainSelector].pathConfig.duration = 3000;
+            // }
         });
     }
 
     update() {
-        // check whether trains collide with semaphores
+        // check whether trains collide with semaphores or final rails
         trains.forEach(train => {
             const trainSelector = train.trainSelector;
             const trainPosition = this.grid.getCellCoord(this[trainSelector].x, this[trainSelector].y);
 
+            // if train is on rail where semaphore is placed
             const trainOnSemaphore = semaphores.find(sem => {
                 if (sem.x === trainPosition.x && sem.y === trainPosition.y) {
                     return true;
                 }
             });
 
-            // if train is on rail where semaphore is placed
-            if (trainOnSemaphore) {
+            if (trainOnSemaphore && trainOnSemaphore.reversed === train.reversed) {
                 switch (trainOnSemaphore.state) {
                     case (semState.STOP):
                         // this[trainSelector].anims.pause(this[trainSelector].anims.currentAnim.frames[0]);
@@ -254,6 +403,22 @@ class SceneMain extends Phaser.Scene {
                     default:
                         break;
                 }
+            }
+
+            // if train is on final rail - reverse train & it's path
+            const trainOnFinalRail = train.finalRails.find(frail => {
+                if (frail.x === trainPosition.x && frail.y === trainPosition.y) {
+                    if (frail.x !== train.lastReverse.x && frail.y !== train.lastReverse.y) {
+                        train.lastReverse = frail;
+                        return true;
+                    }
+                }
+            });
+
+            if (trainOnFinalRail) {
+                // this[trainSelector].pauseFollow();
+                train.reversed = !train.reversed;
+                console.log(`train is on final rail (${trainOnFinalRail.x}, ${trainOnFinalRail.y}), reverse: ${train.reversed}`);
             }
         });
     }
