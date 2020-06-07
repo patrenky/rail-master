@@ -4,7 +4,7 @@ const semState = {
     GO: 'GO'
 };
 
-const switchState = {
+const spriteDirection = {
     LEFT: 'LEFT',
     RIGHT: 'RIGHT'
 }
@@ -25,6 +25,7 @@ const semaphores = [
         x: 26,
         y: 24,
         reversed: false,
+        face: spriteDirection.RIGHT,
         state: semState.STOP,
         position: spritePosition.T
     },
@@ -32,6 +33,7 @@ const semaphores = [
         x: 18,
         y: 24,
         reversed: true,
+        face: spriteDirection.LEFT,
         state: semState.STOP,
         position: spritePosition.T
     }
@@ -123,42 +125,42 @@ const switches = [
         x: 11,
         y: 12,
         reversed: false,
-        state: switchState.LEFT,
+        state: spriteDirection.LEFT,
         position: spritePosition.BL
     },
     {
         x: 14,
         y: 12,
         reversed: false,
-        state: switchState.LEFT,
+        state: spriteDirection.LEFT,
         position: spritePosition.TL
     },
     {
         x: 14,
         y: 14,
         reversed: false,
-        state: switchState.LEFT,
+        state: spriteDirection.LEFT,
         position: spritePosition.BL
     },
     {
         x: 25,
         y: 12,
         reversed: true,
-        state: switchState.LEFT,
+        state: spriteDirection.LEFT,
         position: spritePosition.TL
     },
     {
         x: 25,
         y: 14,
         reversed: true,
-        state: switchState.LEFT,
+        state: spriteDirection.LEFT,
         position: spritePosition.BL
     },
     {
         x: 27,
         y: 12,
         reversed: true,
-        state: switchState.LEFT,
+        state: spriteDirection.LEFT,
         position: spritePosition.T
     },
 ];
@@ -220,7 +222,7 @@ const getSemSprite = semaphoreState => {
 
 const getSwitchSprite = swState => {
     switch (swState) {
-        case (switchState.RIGHT):
+        case (spriteDirection.RIGHT):
             return 'swRight';
         default:
             return 'swLeft';
@@ -277,7 +279,7 @@ class SceneMain extends Phaser.Scene {
             semImg.displayWidth = game.config.width / gridConfig.cols;
             semImg.scaleY = semImg.scaleX;
 
-            if (!sem.reversed) {
+            if (sem.face === spriteDirection.RIGHT) {
                 semImg.flipX = true;
             }
 
@@ -348,10 +350,10 @@ class SceneMain extends Phaser.Scene {
 
             swImg.on('pointerdown', () => {
                 // switch rail switch state
-                if (sw.state === switchState.LEFT) {
-                    sw.state = switchState.RIGHT;
-                } else if (sw.state === switchState.RIGHT) {
-                    sw.state = switchState.LEFT;
+                if (sw.state === spriteDirection.LEFT) {
+                    sw.state = spriteDirection.RIGHT;
+                } else if (sw.state === spriteDirection.RIGHT) {
+                    sw.state = spriteDirection.LEFT;
                 }
 
                 swImg.setTexture(getSwitchSprite(sw.state));
