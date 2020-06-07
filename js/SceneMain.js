@@ -4,6 +4,11 @@ const semState = {
     GO: 'GO'
 };
 
+const switchState = {
+    LEFT: 'LEFT',
+    RIGHT: 'RIGHT'
+}
+
 const spritePosition = {
     T: 'T',
     B: 'B',
@@ -118,36 +123,42 @@ const switches = [
         x: 11,
         y: 12,
         reversed: false,
+        state: switchState.LEFT,
         position: spritePosition.BL
     },
     {
         x: 14,
         y: 12,
         reversed: false,
+        state: switchState.LEFT,
         position: spritePosition.TL
     },
     {
         x: 14,
         y: 14,
         reversed: false,
+        state: switchState.LEFT,
         position: spritePosition.BL
     },
     {
         x: 25,
         y: 12,
         reversed: true,
+        state: switchState.LEFT,
         position: spritePosition.TL
     },
     {
         x: 25,
         y: 14,
         reversed: true,
+        state: switchState.LEFT,
         position: spritePosition.BL
     },
     {
         x: 27,
         y: 12,
         reversed: true,
+        state: switchState.LEFT,
         position: spritePosition.T
     },
 ];
@@ -196,6 +207,26 @@ const getSpriteCoords = (x, y, position) => {
     }
 }
 
+const getSemSprite = semaphoreState => {
+    switch (semaphoreState) {
+        case (semState.GO):
+            return 'semGreen';
+        case (semState.WARN):
+            return 'semYellow';
+        default:
+            return 'semRed';
+    }
+}
+
+const getSwitchSprite = swState => {
+    switch (swState) {
+        case (switchState.RIGHT):
+            return 'swRight';
+        default:
+            return 'swLeft';
+    }
+}
+
 
 class SceneMain extends Phaser.Scene {
     constructor() {
@@ -206,8 +237,12 @@ class SceneMain extends Phaser.Scene {
         this.load.image('tileset', 'assets/tileset.png');
         this.load.tilemapTiledJSON('tilemap', 'assets/tilemap.json');
 
-        this.load.image('semRed', 'assets/semaphores/red.png');
-        this.load.image('semGreen', 'assets/semaphores/green.png');
+        this.load.image('semRed', 'assets/semaphores/sem_red.png');
+        this.load.image('semYellow', 'assets/semaphores/sem_yellow.png');
+        this.load.image('semGreen', 'assets/semaphores/sem_green.png');
+
+        this.load.image('swLeft', 'assets/switches/switch_left.png');
+        this.load.image('swRight', 'assets/switches/switch_right.png');
 
         this.load.spritesheet('train', "assets/train.png", {
             frameWidth: 256,
@@ -237,17 +272,26 @@ class SceneMain extends Phaser.Scene {
         // render semaphores
         semaphores.forEach(sem => {
             const semPosition = getSpriteCoords(sem.x, sem.y, sem.position);
-            const semStateColor = sem.state === semState.GO ? 'semGreen' : 'semRed';
 
-            const semImg = this.add.sprite(gridToPx(semPosition.x), gridToPx(semPosition.y), semStateColor).setInteractive({ useHandCursor: true });
+            const semImg = this.add.sprite(gridToPx(semPosition.x), gridToPx(semPosition.y), getSemSprite(sem.state)).setInteractive({ useHandCursor: true });
             semImg.displayWidth = game.config.width / gridConfig.cols;
             semImg.scaleY = semImg.scaleX;
 
+            if (!sem.reversed) {
+                semImg.flipX = true;
+            }
+
             semImg.on('pointerdown', () => {
                 // switch semaphore state
-                sem.state = sem.state === semState.GO ? semState.STOP : semState.GO;
-                const newSemStateColor = sem.state === semState.GO ? 'semGreen' : 'semRed';
-                semImg.setTexture(newSemStateColor);
+                if (sem.state === semState.GO) {
+                    sem.state = semState.WARN;
+                } else if (sem.state === semState.WARN) {
+                    sem.state = semState.STOP;
+                } else if (sem.state === semState.STOP) {
+                    sem.state = semState.GO;
+                }
+
+                semImg.setTexture(getSemSprite(sem.state));
             });
         });
 
@@ -298,11 +342,20 @@ class SceneMain extends Phaser.Scene {
         switches.forEach(sw => {
             const swPosition = getSpriteCoords(sw.x, sw.y, sw.position);
 
-            const swImg = this.add.sprite(gridToPx(swPosition.x), gridToPx(swPosition.y), '').setInteractive({ useHandCursor: true });
+            const swImg = this.add.sprite(gridToPx(swPosition.x), gridToPx(swPosition.y), getSwitchSprite(sw.state)).setInteractive({ useHandCursor: true });
             swImg.displayWidth = game.config.width / gridConfig.cols;
             swImg.scaleY = swImg.scaleX;
 
             swImg.on('pointerdown', () => {
+                // switch rail switch state
+                if (sw.state === switchState.LEFT) {
+                    sw.state = switchState.RIGHT;
+                } else if (sw.state === switchState.RIGHT) {
+                    sw.state = switchState.LEFT;
+                }
+
+                swImg.setTexture(getSwitchSprite(sw.state));
+
                 // switch enabled/disabled paths affected by current rail switch
                 paths.forEach(path => {
                     if (path.route[sw.reversed ? path.route.length - 1 : 0].x === sw.x && path.route[sw.reversed ? path.route.length - 1 : 0].y === sw.y) {
