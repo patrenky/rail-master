@@ -177,6 +177,10 @@ const switches = [
     },
 ];
 
+const destinationRails = [
+    { x: 29, y: 24 },
+    { x: 37, y: 12 },
+];
 
 const trains = [
     {
@@ -265,6 +269,8 @@ class SceneMain extends Phaser.Scene {
 
         this.load.image('swLeft', 'assets/switches/switch_left.png');
         this.load.image('swRight', 'assets/switches/switch_right.png');
+
+        this.load.image('rotate', 'assets/rotate.png');
 
         this.load.spritesheet('train', "assets/train.png", {
             frameWidth: 256,
@@ -366,7 +372,7 @@ class SceneMain extends Phaser.Scene {
         const trainSelector = train.trainSelector;
 
         const foundPath = paths.find(path => {
-            const pathArray = train.reversed ? path.route.reverse() : path.route;
+            const pathArray = train.reversed ? path.route.slice().reverse() : path.route;
 
             if (pathArray[0].x === pxToGrid(this[trainSelector].x) && pathArray[0].y === pxToGrid(this[trainSelector].y)) {
                 if (path.enabled) {
@@ -375,7 +381,11 @@ class SceneMain extends Phaser.Scene {
             }
         });
 
-        return foundPath;
+        if (!foundPath || !foundPath.route) {
+            return null;
+        }
+
+        return train.reversed ? foundPath.route.slice().reverse() : foundPath.route;
     }
 
     getNextMove(trainSelector) {
@@ -383,11 +393,11 @@ class SceneMain extends Phaser.Scene {
 
         const nextMove = {};
 
-        if (!this[trainSelector].actualPath || !this[trainSelector].actualPath.route) {
+        if (!this[trainSelector].actualPath) {
             return nextMove;
         }
 
-        const actualPath = this[trainSelector].actualPath.route;
+        const actualPath = this[trainSelector].actualPath;
 
         for (let i = 0; i < actualPath.length - 1; i++) {
             // horizontal match -> move on x
@@ -497,6 +507,36 @@ class SceneMain extends Phaser.Scene {
             // get next path
             else {
                 this[trainSelector].actualPath = this.getActualPath(train);
+
+                // train is on destination rail or collide with wrong switched rails
+                if (!this[trainSelector].actualPath) {
+
+                    // if train is on destination rail
+                    const trainOnDestination = destinationRails.find(rail => {
+                        if (rail.x === trainPosition.x && rail.y === trainPosition.y) {
+                            if (!rail.shown) {
+                                rail.shown = true;
+                                return true;
+                            }
+                        }
+                    });
+
+                    if (trainOnDestination) {
+                        const rotateImg = this.add.sprite(gridToPx(trainOnDestination.x), gridToPx(trainOnDestination.y), 'rotate').setInteractive({ useHandCursor: true });
+                        rotateImg.destroyOnClick = true;
+
+                        rotateImg.on('pointerdown', () => {
+                            train.reversed = !train.reversed;
+                            trainOnDestination.shown = false;
+                            rotateImg.destroy();
+                        });
+                    }
+
+                    // else train collide with wrong switched rails (or destination rail, but still not rotated)
+                    else {
+                        console.log("TODO wrong switched rails");
+                    }
+                }
             }
 
             // // if train is on final rail - reverse train & it's path
