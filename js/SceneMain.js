@@ -48,22 +48,22 @@ const spritePosition = {
 
 const semaphores = [
     {
-        x: 9,
+        x: 8,
         y: 20,
         reversed: false,
         face: spriteDirection.LEFT,
         state: semStateDefault.GO,
         type: semType.PRE,
-        position: spritePosition.T
+        position: spritePosition.R
     },
     {
-        x: 9,
+        x: 8,
         y: 16,
         reversed: false,
         face: spriteDirection.LEFT,
         state: semStateIn.GO,
         type: semType.IN,
-        position: spritePosition.T
+        position: spritePosition.R
     },
     {
         x: 15,
@@ -389,6 +389,57 @@ const paths = [
             { x: 37, y: 12 },
         ]
     },
+    {
+        enabled: true,
+        route: [
+            { x: 37, y: 12 },
+            { x: 37, y: 4 },
+            { x: 49, y: 4 },
+            { x: 49, y: 2 },
+            { x: 55, y: 2 },
+            { x: 55, y: 7 },
+            { x: 54, y: 7 },
+            { x: 54, y: 19 },
+        ]
+    },
+    {
+        enabled: false,
+        route: [
+            { x: 37, y: 12 },
+            { x: 43, y: 12 },
+            { x: 43, y: 10 },
+            { x: 48, y: 10 },
+            { x: 48, y: 14 },
+            { x: 43, y: 14 },
+            { x: 43, y: 12 },
+        ]
+    },
+    {
+        enabled: false,
+        route: [
+            { x: 43, y: 10 },
+            { x: 43, y: 8 },
+            { x: 50, y: 8 },
+            { x: 50, y: 16 },
+            { x: 43, y: 16 },
+            { x: 43, y: 14 },
+        ]
+    },
+    {
+        enabled: false,
+        route: [
+            { x: 54, y: 19 },
+            { x: 52, y: 19 },
+            { x: 52, y: 21 },
+        ]
+    },
+    {
+        enabled: true,
+        route: [
+            { x: 54, y: 19 },
+            { x: 54, y: 21 },
+        ]
+    },
 ];
 
 const switches = [
@@ -434,11 +485,32 @@ const switches = [
         state: spriteDirection.LEFT,
         position: spritePosition.T
     },
+    {
+        x: 37,
+        y: 12,
+        reversed: false,
+        state: spriteDirection.LEFT,
+        position: spritePosition.B
+    },
+    {
+        x: 43,
+        y: 10,
+        reversed: false,
+        state: spriteDirection.LEFT,
+        position: spritePosition.L
+    },
+    {
+        x: 54,
+        y: 19,
+        reversed: false,
+        state: spriteDirection.RIGHT,
+        position: spritePosition.TL
+    },
 ];
 
 const destinationRails = [
     { x: 29, y: 24 },
-    { x: 37, y: 12 },
+    { x: 54, y: 39 },
 ];
 
 const trains = [
