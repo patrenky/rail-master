@@ -1130,7 +1130,7 @@ class SceneMain extends Phaser.Scene {
 
                     if (trainOnDestination) {
                         const rotateImg = this.add.sprite(gridToPx(trainOnDestination.x), gridToPx(trainOnDestination.y), 'rotate').setInteractive({ useHandCursor: true });
-                        rotateImg.destroyOnClick = true;
+                        rotateImg.setTint(hexColor.RED);
 
                         rotateImg.on('pointerdown', () => {
                             train.reversed = !train.reversed;
