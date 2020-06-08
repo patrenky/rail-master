@@ -103,57 +103,48 @@ const semaphores = [
     },
     {
         x: 23,
+        y: 10,
+        reversed: false,
+        face: spriteDirection.LEFT,
+        state: semStateDefault.GO,
+        type: semType.OUT,
+        position: spritePosition.B
+    },
+    {
+        x: 24,
         y: 12,
         reversed: false,
         face: spriteDirection.LEFT,
         state: semStateDefault.GO,
         type: semType.OUT,
-        position: spritePosition.T
+        position: spritePosition.B
     },
     {
-        x: 24,
+        x: 23,
         y: 14,
         reversed: false,
         face: spriteDirection.LEFT,
         state: semStateDefault.GO,
         type: semType.OUT,
-        position: spritePosition.T
+        position: spritePosition.B
     },
     {
-        x: 23,
+        x: 24,
         y: 16,
         reversed: false,
         face: spriteDirection.LEFT,
         state: semStateDefault.GO,
         type: semType.OUT,
-        position: spritePosition.T
+        position: spritePosition.B
     },
     {
-        x: 24,
-        y: 18,
+        x: 37,
+        y: 7,
         reversed: false,
         face: spriteDirection.LEFT,
         state: semStateDefault.GO,
-        type: semType.OUT,
-        position: spritePosition.T
-    },
-    {
-        x: 29,
-        y: 12,
-        reversed: true,
-        face: spriteDirection.RIGHT,
-        state: semStateIn.GO,
-        type: semType.IN,
-        position: spritePosition.T
-    },
-    {
-        x: 34,
-        y: 12,
-        reversed: true,
-        face: spriteDirection.RIGHT,
-        state: semStateDefault.GO,
         type: semType.PRE,
-        position: spritePosition.T
+        position: spritePosition.R
     },
     {
         x: 44,
@@ -192,21 +183,12 @@ const semaphores = [
         position: spritePosition.T
     },
     {
-        x: 53,
-        y: 10,
-        reversed: false,
+        x: 51,
+        y: 2,
+        reversed: true,
         face: spriteDirection.RIGHT,
         state: semStateDefault.GO,
         type: semType.PRE,
-        position: spritePosition.T
-    },
-    {
-        x: 53,
-        y: 14,
-        reversed: false,
-        face: spriteDirection.RIGHT,
-        state: semStateDefault.GO,
-        type: semType.IN,
         position: spritePosition.T
     },
     {
@@ -219,94 +201,130 @@ const semaphores = [
         position: spritePosition.T
     },
     {
-        x: 55,
-        y: 20,
+        x: 56,
+        y: 19,
         reversed: true,
         face: spriteDirection.RIGHT,
         state: semStateDefault.STOP,
         type: semType.SORT,
-        position: spritePosition.T
+        position: spritePosition.L
     },
     {
-        x: 53,
+        x: 52,
         y: 23,
         reversed: true,
         face: spriteDirection.LEFT,
         state: semStateDefault.GO,
         type: semType.OUT,
-        position: spritePosition.T
+        position: spritePosition.R
     },
     {
-        x: 55,
+        x: 54,
         y: 23,
         reversed: true,
         face: spriteDirection.LEFT,
         state: semStateDefault.GO,
         type: semType.OUT,
-        position: spritePosition.T
+        position: spritePosition.R
     },
     {
-        x: 57,
+        x: 56,
         y: 23,
         reversed: true,
         face: spriteDirection.LEFT,
         state: semStateDefault.GO,
         type: semType.OUT,
-        position: spritePosition.T
+        position: spritePosition.R
     },
     {
-        x: 51,
-        y: 26,
+        x: 50,
+        y: 25,
         reversed: false,
         face: spriteDirection.LEFT,
         state: semStateDefault.STOP,
         type: semType.SORT,
-        position: spritePosition.T
+        position: spritePosition.R
     },
     {
-        x: 51,
-        y: 28,
+        x: 52,
+        y: 27,
         reversed: false,
         face: spriteDirection.RIGHT,
         state: semStateDefault.GO,
         type: semType.OUT,
-        position: spritePosition.T
+        position: spritePosition.L
     },
     {
-        x: 53,
-        y: 28,
+        x: 54,
+        y: 27,
         reversed: false,
         face: spriteDirection.RIGHT,
         state: semStateDefault.GO,
         type: semType.OUT,
-        position: spritePosition.T
+        position: spritePosition.L
     },
     {
-        x: 55,
-        y: 28,
+        x: 56,
+        y: 27,
         reversed: false,
         face: spriteDirection.RIGHT,
         state: semStateDefault.GO,
         type: semType.OUT,
-        position: spritePosition.T
+        position: spritePosition.L
     },
     {
-        x: 55,
-        y: 34,
+        x: 54,
+        y: 33,
         reversed: false,
         face: spriteDirection.LEFT,
         state: semStateDefault.GO,
         type: semType.IN,
-        position: spritePosition.T
+        position: spritePosition.R
     },
     {
-        x: 55,
-        y: 38,
+        x: 54,
+        y: 37,
         reversed: false,
         face: spriteDirection.LEFT,
         state: semStateDefault.GO,
         type: semType.PRE,
+        position: spritePosition.R
+    },
+    {
+        x: 41,
+        y: 4,
+        reversed: true,
+        face: spriteDirection.RIGHT,
+        state: semStateDefault.GO,
+        type: semType.OUT,
         position: spritePosition.T
+    },
+    {
+        x: 41,
+        y: 6,
+        reversed: true,
+        face: spriteDirection.RIGHT,
+        state: semStateDefault.GO,
+        type: semType.OUT,
+        position: spritePosition.T
+    },
+    {
+        x: 45,
+        y: 4,
+        reversed: false,
+        face: spriteDirection.LEFT,
+        state: semStateDefault.GO,
+        type: semType.OUT,
+        position: spritePosition.B
+    },
+    {
+        x: 45,
+        y: 6,
+        reversed: false,
+        face: spriteDirection.LEFT,
+        state: semStateDefault.GO,
+        type: semType.OUT,
+        position: spritePosition.B
     }
 ];
 
@@ -394,6 +412,29 @@ const paths = [
         route: [
             { x: 37, y: 12 },
             { x: 37, y: 4 },
+            { x: 40, y: 4 },
+        ]
+    },
+    {
+        enabled: true,
+        route: [
+            { x: 40, y: 4 },
+            { x: 46, y: 4 },
+        ]
+    },
+    {
+        enabled: false,
+        route: [
+            { x: 40, y: 4 },
+            { x: 40, y: 6 },
+            { x: 46, y: 6 },
+            { x: 46, y: 4 },
+        ]
+    },
+    {
+        enabled: true,
+        route: [
+            { x: 46, y: 4 },
             { x: 49, y: 4 },
             { x: 49, y: 2 },
             { x: 55, y: 2 },
@@ -474,6 +515,67 @@ const paths = [
             { x: 54, y: 21 },
         ]
     },
+    {
+        enabled: true,
+        route: [
+            { x: 52, y: 21 },
+            { x: 52, y: 24 },
+        ]
+    },
+    {
+        enabled: false,
+        route: [
+            { x: 52, y: 21 },
+            { x: 50, y: 21 },
+            { x: 50, y: 18 },
+        ]
+    },
+    {
+        enabled: false,
+        route: [
+            { x: 52, y: 24 },
+            { x: 52, y: 28 },
+            { x: 54, y: 28 },
+        ]
+    },
+    {
+        enabled: true,
+        route: [
+            { x: 52, y: 24 },
+            { x: 50, y: 24 },
+            { x: 50, y: 28 },
+            { x: 50, y: 36 },
+        ]
+    },
+    {
+        enabled: true,
+        route: [
+            { x: 54, y: 21 },
+            { x: 54, y: 39 },
+        ]
+    },
+    {
+        enabled: false,
+        route: [
+            { x: 54, y: 21 },
+            { x: 56, y: 21 },
+        ]
+    },
+    {
+        enabled: false,
+        route: [
+            { x: 56, y: 21 },
+            { x: 56, y: 18 },
+        ]
+    },
+    {
+        enabled: true,
+        route: [
+            { x: 56, y: 21 },
+            { x: 56, y: 30 },
+            { x: 54, y: 30 },
+        ]
+    },
 ];
 
 const switches = [
@@ -534,11 +636,46 @@ const switches = [
         position: spritePosition.L
     },
     {
+        x: 40,
+        y: 4,
+        reversed: false,
+        state: spriteDirection.LEFT,
+        position: spritePosition.T
+    },
+    {
         x: 54,
         y: 19,
         reversed: false,
         state: spriteDirection.RIGHT,
         position: spritePosition.TL
+    },
+    {
+        x: 52,
+        y: 21,
+        reversed: false,
+        state: spriteDirection.RIGHT,
+        position: spritePosition.R
+    },
+    {
+        x: 52,
+        y: 24,
+        reversed: false,
+        state: spriteDirection.LEFT,
+        position: spritePosition.R
+    },
+    {
+        x: 54,
+        y: 21,
+        reversed: false,
+        state: spriteDirection.LEFT,
+        position: spritePosition.TR
+    },
+    {
+        x: 56,
+        y: 21,
+        reversed: false,
+        state: spriteDirection.RIGHT,
+        position: spritePosition.R
     },
 ];
 
