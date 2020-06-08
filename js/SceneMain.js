@@ -10,9 +10,23 @@ const hexColor = {
 
 const DEGREE_90 = 1.57;
 
-const semState = {
+
+const semType = {
+    PRE: 'PRE', // predzvest
+    IN: 'IN', // vjezdove
+    OUT: 'OUT', // vyjezdove
+    SORT: 'SORT' // serazovaci
+}
+
+// only for semType==IN
+const semStateIn = {
     STOP: 'STOP',
     WARN: 'WARN',
+    GO: 'GO'
+};
+
+const semStateDefault = {
+    STOP: 'STOP',
     GO: 'GO'
 };
 
@@ -34,19 +48,264 @@ const spritePosition = {
 
 const semaphores = [
     {
-        x: 26,
-        y: 24,
+        x: 9,
+        y: 20,
         reversed: false,
-        face: spriteDirection.RIGHT,
-        state: semState.STOP,
+        face: spriteDirection.LEFT,
+        state: semStateDefault.GO,
+        type: semType.PRE,
         position: spritePosition.T
     },
     {
-        x: 18,
-        y: 24,
+        x: 9,
+        y: 16,
+        reversed: false,
+        face: spriteDirection.LEFT,
+        state: semStateIn.GO,
+        type: semType.IN,
+        position: spritePosition.T
+    },
+    {
+        x: 15,
+        y: 10,
+        reversed: true,
+        face: spriteDirection.RIGHT,
+        state: semStateDefault.GO,
+        type: semType.OUT,
+        position: spritePosition.T
+    },
+    {
+        x: 15,
+        y: 12,
+        reversed: true,
+        face: spriteDirection.RIGHT,
+        state: semStateDefault.GO,
+        type: semType.OUT,
+        position: spritePosition.T
+    },
+    {
+        x: 15,
+        y: 14,
+        reversed: true,
+        face: spriteDirection.RIGHT,
+        state: semStateDefault.GO,
+        type: semType.OUT,
+        position: spritePosition.T
+    },
+    {
+        x: 15,
+        y: 16,
+        reversed: true,
+        face: spriteDirection.RIGHT,
+        state: semStateDefault.GO,
+        type: semType.OUT,
+        position: spritePosition.T
+    },
+    {
+        x: 23,
+        y: 12,
+        reversed: false,
+        face: spriteDirection.LEFT,
+        state: semStateDefault.GO,
+        type: semType.OUT,
+        position: spritePosition.T
+    },
+    {
+        x: 24,
+        y: 14,
+        reversed: false,
+        face: spriteDirection.LEFT,
+        state: semStateDefault.GO,
+        type: semType.OUT,
+        position: spritePosition.T
+    },
+    {
+        x: 23,
+        y: 16,
+        reversed: false,
+        face: spriteDirection.LEFT,
+        state: semStateDefault.GO,
+        type: semType.OUT,
+        position: spritePosition.T
+    },
+    {
+        x: 24,
+        y: 18,
+        reversed: false,
+        face: spriteDirection.LEFT,
+        state: semStateDefault.GO,
+        type: semType.OUT,
+        position: spritePosition.T
+    },
+    {
+        x: 29,
+        y: 12,
+        reversed: true,
+        face: spriteDirection.RIGHT,
+        state: semStateIn.GO,
+        type: semType.IN,
+        position: spritePosition.T
+    },
+    {
+        x: 34,
+        y: 12,
+        reversed: true,
+        face: spriteDirection.RIGHT,
+        state: semStateDefault.GO,
+        type: semType.PRE,
+        position: spritePosition.T
+    },
+    {
+        x: 44,
+        y: 8,
+        reversed: true,
+        face: spriteDirection.RIGHT,
+        state: semStateDefault.GO,
+        type: semType.OUT,
+        position: spritePosition.T
+    },
+    {
+        x: 44,
+        y: 10,
+        reversed: true,
+        face: spriteDirection.RIGHT,
+        state: semStateDefault.GO,
+        type: semType.OUT,
+        position: spritePosition.T
+    },
+    {
+        x: 44,
+        y: 14,
+        reversed: true,
+        face: spriteDirection.RIGHT,
+        state: semStateDefault.GO,
+        type: semType.OUT,
+        position: spritePosition.T
+    },
+    {
+        x: 44,
+        y: 16,
+        reversed: true,
+        face: spriteDirection.RIGHT,
+        state: semStateDefault.GO,
+        type: semType.OUT,
+        position: spritePosition.T
+    },
+    {
+        x: 53,
+        y: 10,
+        reversed: false,
+        face: spriteDirection.RIGHT,
+        state: semStateDefault.GO,
+        type: semType.PRE,
+        position: spritePosition.T
+    },
+    {
+        x: 53,
+        y: 14,
+        reversed: false,
+        face: spriteDirection.RIGHT,
+        state: semStateDefault.GO,
+        type: semType.IN,
+        position: spritePosition.T
+    },
+    {
+        x: 49,
+        y: 20,
+        reversed: true,
+        face: spriteDirection.RIGHT,
+        state: semStateDefault.STOP,
+        type: semType.SORT,
+        position: spritePosition.T
+    },
+    {
+        x: 55,
+        y: 20,
+        reversed: true,
+        face: spriteDirection.RIGHT,
+        state: semStateDefault.STOP,
+        type: semType.SORT,
+        position: spritePosition.T
+    },
+    {
+        x: 53,
+        y: 23,
         reversed: true,
         face: spriteDirection.LEFT,
-        state: semState.STOP,
+        state: semStateDefault.GO,
+        type: semType.OUT,
+        position: spritePosition.T
+    },
+    {
+        x: 55,
+        y: 23,
+        reversed: true,
+        face: spriteDirection.LEFT,
+        state: semStateDefault.GO,
+        type: semType.OUT,
+        position: spritePosition.T
+    },
+    {
+        x: 57,
+        y: 23,
+        reversed: true,
+        face: spriteDirection.LEFT,
+        state: semStateDefault.GO,
+        type: semType.OUT,
+        position: spritePosition.T
+    },
+    {
+        x: 51,
+        y: 26,
+        reversed: false,
+        face: spriteDirection.LEFT,
+        state: semStateDefault.STOP,
+        type: semType.SORT,
+        position: spritePosition.T
+    },
+    {
+        x: 51,
+        y: 28,
+        reversed: false,
+        face: spriteDirection.RIGHT,
+        state: semStateDefault.GO,
+        type: semType.OUT,
+        position: spritePosition.T
+    },
+    {
+        x: 53,
+        y: 28,
+        reversed: false,
+        face: spriteDirection.RIGHT,
+        state: semStateDefault.GO,
+        type: semType.OUT,
+        position: spritePosition.T
+    },
+    {
+        x: 55,
+        y: 28,
+        reversed: false,
+        face: spriteDirection.RIGHT,
+        state: semStateDefault.GO,
+        type: semType.OUT,
+        position: spritePosition.T
+    },
+    {
+        x: 55,
+        y: 34,
+        reversed: false,
+        face: spriteDirection.LEFT,
+        state: semStateDefault.GO,
+        type: semType.IN,
+        position: spritePosition.T
+    },
+    {
+        x: 55,
+        y: 38,
+        reversed: false,
+        face: spriteDirection.LEFT,
+        state: semStateDefault.GO,
+        type: semType.PRE,
         position: spritePosition.T
     }
 ];
@@ -225,14 +484,14 @@ const getSpriteCoords = (x, y, position) => {
     }
 }
 
-const getSemSprite = semaphoreState => {
+const getSemSprite = (semaphoreState, semaphoreType) => {
     switch (semaphoreState) {
-        case (semState.GO):
-            return 'semGreen';
-        case (semState.WARN):
-            return 'semYellow';
+        case (semStateDefault.GO || semStateIn.GO):
+            return semaphoreType + '_semGreen';
+        case (semStateDefault.WARN || semStateIn.WARN):
+            return semaphoreType + '_semYellow';
         default:
-            return 'semRed';
+            return semaphoreType + '_semRed';
     }
 }
 
@@ -263,10 +522,25 @@ class SceneMain extends Phaser.Scene {
         this.load.image('tileset', 'assets/tileset.png');
         this.load.tilemapTiledJSON('tilemap', 'assets/tilemap.json');
 
-        this.load.image('semRed', 'assets/semaphores/sem_red.png');
-        this.load.image('semYellow', 'assets/semaphores/sem_yellow.png');
-        this.load.image('semGreen', 'assets/semaphores/sem_green.png');
+        // Semaphores
+        // IN
+        this.load.image('IN_semRed', 'assets/semaphores/sem_in_red.png');
+        this.load.image('IN_semYellow', 'assets/semaphores/sem_in_yellow.png');
+        this.load.image('IN_semGreen', 'assets/semaphores/sem_in_green.png');
 
+        // OUT
+        this.load.image('OUT_semRed', 'assets/semaphores/sem_out_red.png');
+        this.load.image('OUT_semGreen', 'assets/semaphores/sem_out_green.png');
+
+        // PRE 
+        this.load.image('PRE_semRed', 'assets/semaphores/sem_warn_yellow.png');
+        this.load.image('PRE_semGreen', 'assets/semaphores/sem_warn_green.png');
+
+        // SORT - used the same signalisation for algorithm switch (red=blue & green=white)
+        this.load.image('SORT_semRed', 'assets/semaphores/sem_move_blue.png');
+        this.load.image('SORT_semGreen', 'assets/semaphores/sem_move_white.png');
+
+        // Switches
         this.load.image('swLeft', 'assets/switches/switch_left.png');
         this.load.image('swRight', 'assets/switches/switch_right.png');
 
@@ -303,9 +577,12 @@ class SceneMain extends Phaser.Scene {
         semaphores.forEach(sem => {
             const semPosition = getSpriteCoords(sem.x, sem.y, sem.position);
 
-            const semImg = this.add.sprite(gridToPx(semPosition.x), gridToPx(semPosition.y), getSemSprite(sem.state)).setInteractive({ useHandCursor: true });
+            const semImg = this.add.sprite(
+                gridToPx(semPosition.x), 
+                gridToPx(semPosition.y), 
+                getSemSprite(sem.state, sem.type)).setInteractive({ useHandCursor: true });
             semImg.displayWidth = game.config.width / gridConfig.cols;
-            semImg.scaleY = semImg.scaleX;
+            semImg.scaleY = semImg.scaleX = 1.5 * semImg.scaleX;
 
             if (sem.face === spriteDirection.RIGHT) {
                 semImg.flipX = true;
@@ -313,8 +590,12 @@ class SceneMain extends Phaser.Scene {
 
             semImg.on('pointerdown', () => {
                 // switch semaphore state
-                sem.state = getNextState(Object.keys(semState), sem.state);
-                semImg.setTexture(getSemSprite(sem.state));
+                var stateByType = semStateDefault;
+                if (sem.type == semType.IN) {
+                    stateByType = semStateIn;
+                }
+                sem.state = getNextState(Object.keys(stateByType), sem.state);
+                semImg.setTexture(getSemSprite(sem.state, sem.type));
             });
         });
 
