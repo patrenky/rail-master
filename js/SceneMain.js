@@ -329,6 +329,7 @@ const semaphores = [
 ];
 
 const paths = [
+    // lavy prijazd
     {
         enabled: true,
         route: [
@@ -338,6 +339,7 @@ const paths = [
             { x: 11, y: 12 },
         ]
     },
+    // lave mesto
     {
         enabled: true,
         route: [
@@ -400,47 +402,12 @@ const paths = [
             { x: 27, y: 12 },
         ]
     },
+    // lave mesto - vyhybka k okruhu a nahor
     {
         enabled: true,
         route: [
             { x: 27, y: 12 },
             { x: 37, y: 12 },
-        ]
-    },
-    {
-        enabled: true,
-        route: [
-            { x: 37, y: 12 },
-            { x: 37, y: 4 },
-            { x: 40, y: 4 },
-        ]
-    },
-    {
-        enabled: true,
-        route: [
-            { x: 40, y: 4 },
-            { x: 46, y: 4 },
-        ]
-    },
-    {
-        enabled: false,
-        route: [
-            { x: 40, y: 4 },
-            { x: 40, y: 6 },
-            { x: 46, y: 6 },
-            { x: 46, y: 4 },
-        ]
-    },
-    {
-        enabled: true,
-        route: [
-            { x: 46, y: 4 },
-            { x: 49, y: 4 },
-            { x: 49, y: 2 },
-            { x: 55, y: 2 },
-            { x: 55, y: 7 },
-            { x: 54, y: 7 },
-            { x: 54, y: 19 },
         ]
     },
     // k okruhu
@@ -499,13 +466,55 @@ const paths = [
             { x: 50, y: 16 },
         ]
     },
-    // koniec okruhu
+    // k pravemu mestu
+    {
+        enabled: true,
+        route: [
+            { x: 37, y: 12 },
+            { x: 37, y: 4 },
+            { x: 40, y: 4 },
+        ]
+    },
+    {
+        enabled: true,
+        route: [
+            { x: 40, y: 4 },
+            { x: 46, y: 4 },
+        ]
+    },
+    {
+        enabled: false,
+        route: [
+            { x: 40, y: 4 },
+            { x: 40, y: 6 },
+            { x: 46, y: 6 },
+            { x: 46, y: 4 },
+        ]
+    },
+    {
+        enabled: true,
+        route: [
+            { x: 46, y: 4 },
+            { x: 49, y: 4 },
+            { x: 49, y: 2 },
+            { x: 55, y: 2 },
+        ]
+    },
+    {
+        enabled: true,
+        route: [
+            { x: 55, y: 2 },
+            { x: 55, y: 7 },
+            { x: 54, y: 7 },
+            { x: 54, y: 19 },
+        ]
+    },
+    // prave mesto
     {
         enabled: false,
         route: [
             { x: 54, y: 19 },
             { x: 52, y: 19 },
-            { x: 52, y: 21 },
         ]
     },
     {
@@ -518,24 +527,23 @@ const paths = [
     {
         enabled: true,
         route: [
+            { x: 52, y: 19 },
             { x: 52, y: 21 },
-            { x: 52, y: 24 },
         ]
     },
     {
         enabled: false,
         route: [
-            { x: 52, y: 21 },
-            { x: 50, y: 21 },
             { x: 50, y: 18 },
+            { x: 50, y: 21 },
+            { x: 52, y: 21 },
         ]
     },
     {
-        enabled: false,
+        enabled: true,
         route: [
+            { x: 52, y: 21 },
             { x: 52, y: 24 },
-            { x: 52, y: 28 },
-            { x: 54, y: 28 },
         ]
     },
     {
@@ -548,10 +556,31 @@ const paths = [
         ]
     },
     {
+        enabled: false,
+        route: [
+            { x: 52, y: 24 },
+            { x: 52, y: 28 },
+        ]
+    },
+    {
+        enabled: false,
+        route: [
+            { x: 52, y: 28 },
+            { x: 54, y: 28 },
+        ]
+    },
+    {
         enabled: true,
         route: [
             { x: 54, y: 21 },
-            { x: 54, y: 39 },
+            { x: 54, y: 24 },
+        ]
+    },
+    {
+        enabled: true,
+        route: [
+            { x: 54, y: 24 },
+            { x: 54, y: 28 },
         ]
     },
     {
@@ -573,7 +602,27 @@ const paths = [
         route: [
             { x: 56, y: 21 },
             { x: 56, y: 30 },
+        ]
+    },
+    {
+        enabled: false,
+        route: [
+            { x: 56, y: 30 },
             { x: 54, y: 30 },
+        ]
+    },
+    {
+        enabled: true,
+        route: [
+            { x: 54, y: 28 },
+            { x: 54, y: 30 },
+        ]
+    },
+    {
+        enabled: true,
+        route: [
+            { x: 54, y: 30 },
+            { x: 54, y: 39 },
         ]
     },
 ];
@@ -652,9 +701,9 @@ const switches = [
     {
         x: 52,
         y: 21,
-        reversed: false,
+        reversed: true,
         state: spriteDirection.RIGHT,
-        position: spritePosition.R
+        position: spritePosition.BL
     },
     {
         x: 52,
@@ -668,7 +717,7 @@ const switches = [
         y: 21,
         reversed: false,
         state: spriteDirection.LEFT,
-        position: spritePosition.TR
+        position: spritePosition.L
     },
     {
         x: 56,
@@ -677,10 +726,27 @@ const switches = [
         state: spriteDirection.RIGHT,
         position: spritePosition.R
     },
+    {
+        x: 54,
+        y: 28,
+        reversed: true,
+        state: spriteDirection.RIGHT,
+        position: spritePosition.BL
+    },
+    {
+        x: 54,
+        y: 30,
+        reversed: true,
+        state: spriteDirection.RIGHT,
+        position: spritePosition.BR
+    },
 ];
 
 const destinationRails = [
     { x: 29, y: 24 },
+    { x: 50, y: 18 },
+    { x: 56, y: 18 },
+    { x: 50, y: 36 },
     { x: 54, y: 39 },
 ];
 
@@ -1075,7 +1141,7 @@ class SceneMain extends Phaser.Scene {
 
                     // else train collide with wrong switched rails (or destination rail, but still not rotated)
                     else {
-                        console.log("TODO wrong switched rails");
+                        // console.log("TODO wrong switched rails");
                     }
                 }
             }
