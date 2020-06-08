@@ -402,16 +402,51 @@ const paths = [
             { x: 54, y: 19 },
         ]
     },
+    // k okruhu
     {
         enabled: false,
         route: [
             { x: 37, y: 12 },
             { x: 43, y: 12 },
+        ]
+    },
+    {
+        enabled: true,
+        route: [
+            { x: 43, y: 12 },
+            { x: 43, y: 10 },
+        ]
+    },
+    {
+        enabled: true,
+        route: [
+            { x: 43, y: 12 },
+            { x: 43, y: 14 },
+        ]
+    },
+    // maly okruh
+    {
+        enabled: true,
+        route: [
+            { x: 43, y: 14 },
+            { x: 48, y: 14 },
+        ]
+    },
+    {
+        enabled: true,
+        route: [
             { x: 43, y: 10 },
             { x: 48, y: 10 },
             { x: 48, y: 14 },
+        ]
+    },
+    // velky okruh
+    {
+        enabled: true,
+        route: [
             { x: 43, y: 14 },
-            { x: 43, y: 12 },
+            { x: 43, y: 16 },
+            { x: 50, y: 16 },
         ]
     },
     {
@@ -421,10 +456,9 @@ const paths = [
             { x: 43, y: 8 },
             { x: 50, y: 8 },
             { x: 50, y: 16 },
-            { x: 43, y: 16 },
-            { x: 43, y: 14 },
         ]
     },
+    // koniec okruhu
     {
         enabled: false,
         route: [
@@ -513,11 +547,16 @@ const destinationRails = [
     { x: 54, y: 39 },
 ];
 
+const switchReverseRails = [
+    { x: 48, y: 12 },
+    { x: 50, y: 12 },
+];
+
 const trains = [
     {
         trainSelector: 'ruske_drahy',
         trainColor: hexColor.ORANGE,
-        startPosition: { x: 29, y: 24 },
+        startPosition: { x: 27, y: 12 },
         startRotation: 90,
         reversed: false,
     },
@@ -649,10 +688,7 @@ class SceneMain extends Phaser.Scene {
         semaphores.forEach(sem => {
             const semPosition = getSpriteCoords(sem.x, sem.y, sem.position);
 
-            const semImg = this.add.sprite(
-                gridToPx(semPosition.x), 
-                gridToPx(semPosition.y), 
-                getSemSprite(sem.state, sem.type)).setInteractive({ useHandCursor: true });
+            const semImg = this.add.sprite(gridToPx(semPosition.x), gridToPx(semPosition.y), getSemSprite(sem.state, sem.type)).setInteractive({ useHandCursor: true });
             semImg.displayWidth = game.config.width / gridConfig.cols;
             semImg.scaleY = semImg.scaleX = 1.5 * semImg.scaleX;
 
@@ -682,6 +718,7 @@ class SceneMain extends Phaser.Scene {
         // render trains and their paths
         trains.forEach(train => {
             const trainSelector = train.trainSelector;
+            train.reversedDelay = 0;
 
             this[trainSelector] = this.add.sprite(gridToPx(train.startPosition.x), gridToPx(train.startPosition.y), 'train').play('train_animation');
             this[trainSelector].displayHeight = game.config.height / gridConfig.rows * 2;
@@ -793,6 +830,20 @@ class SceneMain extends Phaser.Scene {
         trains.forEach(train => {
             const trainSelector = train.trainSelector;
             const trainPosition = { x: pxToGrid(this[trainSelector].x), y: pxToGrid(this[trainSelector].y) };
+
+            // check if train collides with switch reverse rails (circuit)
+            const trainOnReverseRail = switchReverseRails.find(rail => {
+                if (rail.x === trainPosition.x && rail.y === trainPosition.y) {
+                    return true;
+                }
+            });
+
+            train.reversedDelay -= 1;
+
+            if (trainOnReverseRail && train.reversedDelay < 1) {
+                train.reversed = !train.reversed;
+                train.reversedDelay = 20;
+            }
 
             // // if train is on rail where semaphore is placed
             // const trainOnSemaphore = semaphores.find(sem => {
