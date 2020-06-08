@@ -8,6 +8,8 @@ const hexColor = {
     ORANGE: 0xFFA500,
 };
 
+const DEGREE_90 = 1.57;
+
 const semState = {
     STOP: 'STOP',
     WARN: 'WARN',
@@ -282,8 +284,8 @@ class SceneMain extends Phaser.Scene {
         const map = this.make.tilemap({ key: 'tilemap' });
         const tileset = map.addTilesetImage('tileset', 'tileset');
         map.createStaticLayer('Rails', tileset);
-        map.createStaticLayer('Semaphores', tileset);
-        map.createStaticLayer('Switches', tileset);
+        // map.createStaticLayer('Semaphores', tileset);
+        // map.createStaticLayer('Switches', tileset);
 
         this.cameras.main.setBackgroundColor(hexColor.GREEN);
 
@@ -373,30 +375,31 @@ class SceneMain extends Phaser.Scene {
             }
         });
 
-        // console.log(foundPath);
-
         return foundPath;
     }
 
     getNextMove(trainSelector) {
         const actualPosition = { x: pxToGrid(this[trainSelector].x), y: pxToGrid(this[trainSelector].y) };
-        const actualPath = this[trainSelector].actualPath.route;
 
         const nextMove = {};
 
-        for (let i = 0; i < actualPath.length; i++) {
-            const nextSelector = (i + 1) % actualPath.length;
+        if (!this[trainSelector].actualPath || !this[trainSelector].actualPath.route) {
+            return nextMove;
+        }
 
+        const actualPath = this[trainSelector].actualPath.route;
+
+        for (let i = 0; i < actualPath.length - 1; i++) {
             // horizontal match -> move on x
-            if (actualPath[i].y === actualPosition.y && actualPath[nextSelector].y === actualPosition.y) {
-                // console.log(`horizontal match ${gridToPx(actualPath[nextSelector].x) - this[trainSelector].x}`);
-                nextMove.x = gridToPx(actualPath[nextSelector].x) - this[trainSelector].x;
+            if (actualPath[i].y === actualPosition.y && actualPath[i + 1].y === actualPosition.y) {
+                // console.log(`horizontal match ${gridToPx(actualPath[i + 1].x)} (${actualPath[i + 1].x}) - ${this[trainSelector].x} -> ${gridToPx(actualPath[i + 1].x) - this[trainSelector].x}`);
+                nextMove.x = gridToPx(actualPath[i + 1].x) - this[trainSelector].x;
             }
 
             // vertical match -> move on y
-            else if (actualPath[i].x === actualPosition.x && actualPath[nextSelector].x === actualPosition.x) {
-                // console.log(`vertical match ${gridToPx(actualPath[nextSelector].y) - this[trainSelector].y}`);
-                nextMove.y = gridToPx(actualPath[nextSelector].y) - this[trainSelector].y;
+            else if (actualPath[i].x === actualPosition.x && actualPath[i + 1].x === actualPosition.x) {
+                // console.log(`vertical match ${gridToPx(actualPath[i + 1].y)} (${actualPath[i + 1].y}) - ${this[trainSelector].y} -> ${gridToPx(actualPath[i + 1].y) - this[trainSelector].y}`);
+                nextMove.y = gridToPx(actualPath[i + 1].y) - this[trainSelector].y;
             }
 
             if (nextMove.x || nextMove.y) break;
@@ -453,7 +456,7 @@ class SceneMain extends Phaser.Scene {
 
             // count and execute next move
             const nextMove = this.getNextMove(trainSelector);
-            const baseMoveStep = 5;
+            const baseMoveStep = 1;
 
             // horizontal move
             if (nextMove.x) {
@@ -461,8 +464,10 @@ class SceneMain extends Phaser.Scene {
                 // train rotation
                 if (nextMove.x < 0) {
                     // to left
+                    this[trainSelector].rotation = -DEGREE_90;
                 } else {
                     // to right
+                    this[trainSelector].rotation = DEGREE_90;
                 }
 
                 // movement
@@ -477,8 +482,10 @@ class SceneMain extends Phaser.Scene {
                 // train rotation
                 if (nextMove.y < 0) {
                     // to top
+                    this[trainSelector].rotation = 0;
                 } else {
                     // to bottom
+                    this[trainSelector].rotation = 2 * DEGREE_90;
                 }
 
                 // movement
@@ -489,7 +496,6 @@ class SceneMain extends Phaser.Scene {
 
             // get next path
             else {
-                console.log("get next path");
                 this[trainSelector].actualPath = this.getActualPath(train);
             }
 
