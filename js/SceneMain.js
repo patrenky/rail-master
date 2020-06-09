@@ -9,7 +9,9 @@ const hexColor = {
 };
 
 const DEGREE_90 = 1.57;
-
+const BASE_SPEED = 1;
+const SLOW_SPEED = 0.5;
+const BACKOFF_TIME = 50;
 
 const semType = {
     PRE: 'PRE', // predzvest
@@ -18,16 +20,10 @@ const semType = {
     SORT: 'SORT' // serazovaci
 }
 
-// only for semType==IN
-const semStateIn = {
-    STOP: 'STOP',
+const semState = {
+    GO: 'GO',
     WARN: 'WARN',
-    GO: 'GO'
-};
-
-const semStateDefault = {
     STOP: 'STOP',
-    GO: 'GO'
 };
 
 const spriteDirection = {
@@ -53,7 +49,7 @@ const semaphores = [
         reversed: false,
         rotated: false,
         face: spriteDirection.LEFT,
-        state: semStateDefault.GO,
+        state: semState.GO,
         type: semType.PRE,
         position: spritePosition.R
     },
@@ -62,9 +58,9 @@ const semaphores = [
         y: 16,
         reversed: false,
         rotated: false,
-        previous: { x: 8, y: 20},
+        previous: { x: 8, y: 20 },
         face: spriteDirection.LEFT,
-        state: semStateIn.GO,
+        state: semState.GO,
         type: semType.IN,
         position: spritePosition.R
     },
@@ -73,9 +69,9 @@ const semaphores = [
         y: 10,
         reversed: true,
         rotated: false,
-        previous: { x: 32, y: 12},
+        previous: { x: 32, y: 12 },
         face: spriteDirection.RIGHT,
-        state: semStateDefault.GO,
+        state: semState.GO,
         type: semType.OUT,
         position: spritePosition.T
     },
@@ -84,9 +80,9 @@ const semaphores = [
         y: 12,
         reversed: true,
         rotated: false,
-        previous: { x: 32, y: 12},
+        previous: { x: 32, y: 12 },
         face: spriteDirection.RIGHT,
-        state: semStateDefault.GO,
+        state: semState.GO,
         type: semType.OUT,
         position: spritePosition.T
     },
@@ -95,9 +91,9 @@ const semaphores = [
         y: 14,
         reversed: true,
         rotated: false,
-        previous: { x: 32, y: 12},
+        previous: { x: 32, y: 12 },
         face: spriteDirection.RIGHT,
-        state: semStateDefault.GO,
+        state: semState.GO,
         type: semType.OUT,
         position: spritePosition.T
     },
@@ -106,9 +102,9 @@ const semaphores = [
         y: 16,
         reversed: true,
         rotated: false,
-        previous: { x: 32, y: 12},
+        previous: { x: 32, y: 12 },
         face: spriteDirection.RIGHT,
-        state: semStateDefault.GO,
+        state: semState.GO,
         type: semType.OUT,
         position: spritePosition.T
     },
@@ -117,51 +113,51 @@ const semaphores = [
         y: 10,
         reversed: false,
         rotated: false,
-        previous: { x: 8, y: 16},
+        previous: { x: 8, y: 16 },
         face: spriteDirection.LEFT,
-        state: semStateDefault.GO,
+        state: semState.GO,
         type: semType.OUT,
-        position: spritePosition.B
+        position: spritePosition.T
     },
     {
-        x: 24,
+        x: 23,
         y: 12,
         reversed: false,
         rotated: false,
-        previous: { x: 8, y: 16},
+        previous: { x: 8, y: 16 },
         face: spriteDirection.LEFT,
-        state: semStateDefault.GO,
+        state: semState.GO,
         type: semType.OUT,
-        position: spritePosition.B
+        position: spritePosition.T
     },
     {
         x: 23,
         y: 14,
         reversed: false,
         rotated: false,
-        previous: { x: 8, y: 16},
+        previous: { x: 8, y: 16 },
         face: spriteDirection.LEFT,
-        state: semStateDefault.GO,
+        state: semState.GO,
         type: semType.OUT,
-        position: spritePosition.B
+        position: spritePosition.T
     },
     {
-        x: 24,
+        x: 23,
         y: 16,
         reversed: false,
         rotated: false,
-        previous: { x: 8, y: 16},
+        previous: { x: 8, y: 16 },
         face: spriteDirection.LEFT,
-        state: semStateDefault.GO,
+        state: semState.GO,
         type: semType.OUT,
-        position: spritePosition.B
+        position: spritePosition.T
     },
     {
         x: 32,
         y: 12,
         reversed: true,
         face: spriteDirection.RIGHT,
-        state: semStateDefault.GO,
+        state: semState.GO,
         type: semType.PRE,
         position: spritePosition.T
     },
@@ -170,7 +166,7 @@ const semaphores = [
         y: 7,
         reversed: false,
         face: spriteDirection.LEFT,
-        state: semStateDefault.GO,
+        state: semState.GO,
         type: semType.PRE,
         position: spritePosition.R
     },
@@ -180,7 +176,7 @@ const semaphores = [
         reversed: true,
         rotated: false,
         face: spriteDirection.RIGHT,
-        state: semStateDefault.GO,
+        state: semState.GO,
         type: semType.OUT,
         position: spritePosition.T
     },
@@ -190,7 +186,7 @@ const semaphores = [
         reversed: true,
         rotated: false,
         face: spriteDirection.RIGHT,
-        state: semStateDefault.GO,
+        state: semState.GO,
         type: semType.OUT,
         position: spritePosition.T
     },
@@ -200,7 +196,7 @@ const semaphores = [
         reversed: true,
         rotated: false,
         face: spriteDirection.RIGHT,
-        state: semStateDefault.GO,
+        state: semState.GO,
         type: semType.OUT,
         position: spritePosition.T
     },
@@ -210,7 +206,7 @@ const semaphores = [
         reversed: true,
         rotated: false,
         face: spriteDirection.RIGHT,
-        state: semStateDefault.GO,
+        state: semState.GO,
         type: semType.OUT,
         position: spritePosition.T
     },
@@ -219,7 +215,7 @@ const semaphores = [
         y: 2,
         reversed: true,
         face: spriteDirection.RIGHT,
-        state: semStateDefault.GO,
+        state: semState.GO,
         type: semType.PRE,
         position: spritePosition.T
     },
@@ -229,7 +225,7 @@ const semaphores = [
         reversed: true,
         rotated: true,
         face: spriteDirection.RIGHT,
-        state: semStateDefault.STOP,
+        state: semState.STOP,
         type: semType.SORT,
         position: spritePosition.T
     },
@@ -239,7 +235,7 @@ const semaphores = [
         reversed: true,
         rotated: true,
         face: spriteDirection.RIGHT,
-        state: semStateDefault.STOP,
+        state: semState.STOP,
         type: semType.SORT,
         position: spritePosition.L
     },
@@ -248,9 +244,9 @@ const semaphores = [
         y: 23,
         reversed: true,
         rotated: false,
-        previous: { x: 54, y: 33},
+        previous: { x: 54, y: 33 },
         face: spriteDirection.LEFT,
-        state: semStateDefault.GO,
+        state: semState.GO,
         type: semType.OUT,
         position: spritePosition.R
     },
@@ -259,9 +255,9 @@ const semaphores = [
         y: 23,
         reversed: true,
         rotated: false,
-        previous: { x: 54, y: 33},
+        previous: { x: 54, y: 33 },
         face: spriteDirection.LEFT,
-        state: semStateDefault.GO,
+        state: semState.GO,
         type: semType.OUT,
         position: spritePosition.R
     },
@@ -270,9 +266,9 @@ const semaphores = [
         y: 23,
         reversed: true,
         rotated: false,
-        previous: { x: 54, y: 33},
+        previous: { x: 54, y: 33 },
         face: spriteDirection.LEFT,
-        state: semStateDefault.GO,
+        state: semState.GO,
         type: semType.OUT,
         position: spritePosition.R
     },
@@ -282,18 +278,17 @@ const semaphores = [
         reversed: true,
         rotated: false,
         face: spriteDirection.LEFT,
-        state: semStateDefault.STOP,
+        state: semState.STOP,
         type: semType.SORT,
         position: spritePosition.R
     },
     {
         x: 54,
         y: 13,
-        reversed: true,
+        reversed: false,
         rotated: true,
-        previous: { x: 54, y: 13},
         face: spriteDirection.RIGHT,
-        state: semStateDefault.GO,
+        state: semState.GO,
         type: semType.PRE,
         position: spritePosition.L
     },
@@ -302,9 +297,9 @@ const semaphores = [
         y: 27,
         reversed: false,
         rotated: true,
-        previous: { x: 54, y: 13},
+        previous: { x: 54, y: 13 },
         face: spriteDirection.RIGHT,
-        state: semStateDefault.GO,
+        state: semState.GO,
         type: semType.OUT,
         position: spritePosition.L
     },
@@ -313,9 +308,9 @@ const semaphores = [
         y: 27,
         reversed: false,
         rotated: true,
-        previous: { x: 54, y: 13},
+        previous: { x: 54, y: 13 },
         face: spriteDirection.RIGHT,
-        state: semStateDefault.GO,
+        state: semState.GO,
         type: semType.OUT,
         position: spritePosition.L
     },
@@ -324,9 +319,9 @@ const semaphores = [
         y: 27,
         reversed: false,
         rotated: true,
-        previous: { x: 54, y: 13},
+        previous: { x: 54, y: 13 },
         face: spriteDirection.RIGHT,
-        state: semStateDefault.GO,
+        state: semState.GO,
         type: semType.OUT,
         position: spritePosition.L
     },
@@ -335,9 +330,9 @@ const semaphores = [
         y: 33,
         reversed: true,
         rotated: false,
-        previous: { x: 54, y: 37},
+        previous: { x: 54, y: 37 },
         face: spriteDirection.LEFT,
-        state: semStateDefault.GO,
+        state: semState.GO,
         type: semType.IN,
         position: spritePosition.R
     },
@@ -346,7 +341,7 @@ const semaphores = [
         y: 37,
         reversed: true,
         face: spriteDirection.LEFT,
-        state: semStateDefault.GO,
+        state: semState.GO,
         type: semType.PRE,
         position: spritePosition.R
     },
@@ -355,9 +350,9 @@ const semaphores = [
         y: 4,
         reversed: true,
         rotated: false,
-        previous: { x: 51, y: 2},
+        previous: { x: 51, y: 2 },
         face: spriteDirection.RIGHT,
-        state: semStateDefault.GO,
+        state: semState.GO,
         type: semType.OUT,
         position: spritePosition.T
     },
@@ -366,9 +361,9 @@ const semaphores = [
         y: 6,
         reversed: true,
         rotated: false,
-        previous: { x: 51, y: 2},
+        previous: { x: 51, y: 2 },
         face: spriteDirection.RIGHT,
-        state: semStateDefault.GO,
+        state: semState.GO,
         type: semType.OUT,
         position: spritePosition.T
     },
@@ -377,22 +372,22 @@ const semaphores = [
         y: 4,
         reversed: false,
         rotated: false,
-        previous: { x: 37, y: 7},
+        previous: { x: 37, y: 7 },
         face: spriteDirection.LEFT,
-        state: semStateDefault.GO,
+        state: semState.GO,
         type: semType.OUT,
-        position: spritePosition.B
+        position: spritePosition.T
     },
     {
         x: 45,
         y: 6,
         reversed: false,
         rotated: false,
-        previous: { x: 37, y: 7},
+        previous: { x: 37, y: 7 },
         face: spriteDirection.LEFT,
-        state: semStateDefault.GO,
+        state: semState.GO,
         type: semType.OUT,
-        position: spritePosition.B
+        position: spritePosition.T
     }
 ];
 
@@ -827,7 +822,7 @@ const trains = [
     {
         trainSelector: 'ruske_drahy',
         trainColor: hexColor.ORANGE,
-        startPosition: { x: 27, y: 12 },
+        startPosition: { x: 29, y: 24 },
         startRotation: 90,
         reversed: false,
     },
@@ -868,9 +863,9 @@ const getSpriteCoords = (x, y, position) => {
 
 const getSemSprite = (semaphoreState, semaphoreType) => {
     switch (semaphoreState) {
-        case (semStateDefault.GO || semStateIn.GO):
+        case (semState.GO):
             return semaphoreType + '_semGreen';
-        case (semStateDefault.WARN || semStateIn.WARN):
+        case (semState.WARN):
             return semaphoreType + '_semYellow';
         default:
             return semaphoreType + '_semRed';
@@ -892,6 +887,8 @@ const getNextState = (array, actual) => {
             return array[(i + 1) % array.length]
         }
     }
+
+    return array[0];
 }
 
 
@@ -915,7 +912,7 @@ class SceneMain extends Phaser.Scene {
         this.load.image('OUT_semGreen', 'assets/semaphores/sem_out_green.png');
 
         // PRE 
-        this.load.image('PRE_semRed', 'assets/semaphores/sem_warn_yellow.png');
+        this.load.image('PRE_semYellow', 'assets/semaphores/sem_warn_yellow.png');
         this.load.image('PRE_semGreen', 'assets/semaphores/sem_warn_green.png');
 
         // SORT - used the same signalisation for algorithm switch (red=blue & green=white)
@@ -956,30 +953,29 @@ class SceneMain extends Phaser.Scene {
         this.grid.showNumbers();
 
         // render semaphores
-        semaphores.forEach(sem => {
+        semaphores.forEach((sem, idx) => {
+            const semSelector = sem.semSelector = `sem${idx}`;
             const semPosition = getSpriteCoords(sem.x, sem.y, sem.position);
 
-            const semImg = this.add.sprite(gridToPx(semPosition.x), gridToPx(semPosition.y), getSemSprite(sem.state, sem.type)).setInteractive({ useHandCursor: true });
-            semImg.displayWidth = game.config.width / gridConfig.cols;
-            semImg.scaleY = semImg.scaleX = 1.5 * semImg.scaleX;
+            this[semSelector] = this.add.sprite(gridToPx(semPosition.x), gridToPx(semPosition.y), getSemSprite(sem.state, sem.type));
+            this[semSelector].displayWidth = game.config.width / gridConfig.cols;
+            this[semSelector].scaleY = this[semSelector].scaleX = 1.5 * this[semSelector].scaleX;
 
             if (sem.face === spriteDirection.RIGHT) {
-                semImg.flipX = true;
+                this[semSelector].flipX = true;
             }
 
             if (sem.rotated) {
-                semImg.rotation = 2 * DEGREE_90;
+                this[semSelector].rotation = 2 * DEGREE_90;
             }
 
-            semImg.on('pointerdown', () => {
-                // switch semaphore state
-                var stateByType = semStateDefault;
-                if (sem.type == semType.IN) {
-                    stateByType = semStateIn;
-                }
-                sem.state = getNextState(Object.keys(stateByType), sem.state);
-                semImg.setTexture(getSemSprite(sem.state, sem.type));
-            });
+            if (sem.type !== semType.PRE) {
+                this[semSelector].setInteractive({ useHandCursor: true });
+                this[semSelector].on('pointerdown', () => {
+                    // switch semaphore state
+                    this.switchSemaphoreState(sem);
+                });
+            }
         });
 
         // train animation
@@ -994,6 +990,8 @@ class SceneMain extends Phaser.Scene {
         trains.forEach(train => {
             const trainSelector = train.trainSelector;
             train.reversedDelay = 0;
+            train.stopDelay = 0;
+            train.moveSpeed = BASE_SPEED;
 
             this[trainSelector] = this.add.sprite(gridToPx(train.startPosition.x), gridToPx(train.startPosition.y), 'train').play('train_animation');
             this[trainSelector].displayHeight = game.config.height / gridConfig.rows * 2;
@@ -1031,6 +1029,61 @@ class SceneMain extends Phaser.Scene {
         });
 
         this.renderPaths();
+    }
+
+    switchSemaphoreState(semaphore, requiredState) {
+        // console.log("switchSemaphoreState", semaphore.type, requiredState);
+        const nextStates = requiredState ? [requiredState] : [semState.GO, semState.STOP];
+
+        semaphore.state = getNextState(nextStates, semaphore.state);
+        this[semaphore.semSelector].setTexture(getSemSprite(semaphore.state, semaphore.type));
+        // console.log(semaphore.state);
+
+        // if semaphore has previous semaphore, call switch recursively
+        if (semaphore.previous) {
+            if (semaphore.previous.x && semaphore.previous.y) {
+                // first find semaphores with same child and check if they are all green
+                let parentSems = 0;
+                let allGreen = true;
+
+                semaphores.forEach(paSem => {
+                    if (paSem.previous) {
+                        if (paSem.previous.x === semaphore.previous.x && paSem.previous.y === semaphore.previous.y) {
+                            parentSems++;
+                            if (paSem.state !== semState.GO) {
+                                allGreen = false
+                            }
+                        }
+                    }
+                });
+
+                // find child semaphore
+                const prevSem = semaphores.find(pSem => {
+                    if (pSem.x === semaphore.previous.x && pSem.y === semaphore.previous.y) {
+                        return true;
+                    }
+                });
+
+                // decide child state
+                if (prevSem) {
+                    let prevSemState = [];
+
+                    if (semaphore.state === semState.GO) {
+                        if (allGreen) {
+                            prevSemState = semState.GO;
+                        } else {
+                            prevSemState = semState.WARN;
+                        }
+                    } else if (semaphore.state === semState.WARN) {
+                        prevSemState = semState.GO;
+                    } else if (semaphore.state === semState.STOP) {
+                        prevSemState = semState.WARN;
+                    }
+
+                    this.switchSemaphoreState(prevSem, prevSemState);
+                }
+            }
+        }
     }
 
     getActualPath(train) {
@@ -1106,6 +1159,9 @@ class SceneMain extends Phaser.Scene {
             const trainSelector = train.trainSelector;
             const trainPosition = { x: pxToGrid(this[trainSelector].x), y: pxToGrid(this[trainSelector].y) };
 
+            train.reversedDelay -= 1;
+            train.stopDelay -= 1;
+
             // check if train collides with switch reverse rails (circuit)
             const trainOnReverseRail = switchReverseRails.find(rail => {
                 if (rail.x === trainPosition.x && rail.y === trainPosition.y) {
@@ -1113,39 +1169,45 @@ class SceneMain extends Phaser.Scene {
                 }
             });
 
-            train.reversedDelay -= 1;
-
             if (trainOnReverseRail && train.reversedDelay < 1) {
+                train.reversedDelay = BACKOFF_TIME;
                 train.reversed = !train.reversed;
-                train.reversedDelay = 20;
             }
 
-            // // if train is on rail where semaphore is placed
-            // const trainOnSemaphore = semaphores.find(sem => {
-            //     if (sem.x === trainPosition.x && sem.y === trainPosition.y) {
-            //         return true;
-            //     }
-            // });
+            // if train is on rail where semaphore is placed
+            const trainOnSemaphore = semaphores.find(sem => {
+                if (sem.x === trainPosition.x && sem.y === trainPosition.y) {
+                    return true;
+                }
+            });
 
-            // if (trainOnSemaphore && trainOnSemaphore.reversed === train.reversed) {
-            //     switch (trainOnSemaphore.state) {
-            //         case (semState.STOP):
-            //             // this[trainSelector].anims.pause(this[trainSelector].anims.currentAnim.frames[0]);
-            //             this[trainSelector].pauseFollow();
-            //             break;
-            //         case (semState.GO): {
-            //             // this[trainSelector].anims.play();
-            //             this[trainSelector].resumeFollow();
-            //             break;
-            //         }
-            //         default:
-            //             break;
-            //     }
-            // }
+            // train action based on semaphore state
+            if (trainOnSemaphore && trainOnSemaphore.reversed === train.reversed) {
+                switch (trainOnSemaphore.state) {
+                    case (semState.GO):
+                        train.moveSpeed = BASE_SPEED;
+                        break;
+                    case (semState.WARN):
+                        train.moveSpeed = SLOW_SPEED;
+                        break;
+                    case (semState.STOP):
+                        if (train.stopDelay < 1) {
+                            train.moveSpeed = 0;
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            // switch semaphore to red when train pass through
+            if (trainOnSemaphore && trainOnSemaphore.type !== semType.PRE && train.stopDelay < 1) {
+                train.stopDelay = BACKOFF_TIME;
+                this.switchSemaphoreState(trainOnSemaphore, semState.STOP);
+            }
 
             // count and execute next move
             const nextMove = this.getNextMove(trainSelector);
-            const baseMoveStep = 1;
 
             // horizontal move
             if (nextMove.x) {
@@ -1161,7 +1223,7 @@ class SceneMain extends Phaser.Scene {
 
                 // movement
                 const moveSign = nextMove.x / Math.abs(nextMove.x);
-                const moveStep = Math.abs(nextMove.x) > baseMoveStep ? moveSign * baseMoveStep : nextMove.x;
+                const moveStep = Math.abs(nextMove.x) > train.moveSpeed ? moveSign * train.moveSpeed : nextMove.x;
                 this[trainSelector].x += moveStep;
             }
 
@@ -1179,7 +1241,7 @@ class SceneMain extends Phaser.Scene {
 
                 // movement
                 const moveSign = nextMove.y / Math.abs(nextMove.y);
-                const moveStep = Math.abs(nextMove.y) > baseMoveStep ? moveSign * baseMoveStep : nextMove.y;
+                const moveStep = Math.abs(nextMove.y) > train.moveSpeed ? moveSign * train.moveSpeed : nextMove.y;
                 this[trainSelector].y += moveStep;
             }
 
@@ -1217,22 +1279,6 @@ class SceneMain extends Phaser.Scene {
                     }
                 }
             }
-
-            // // if train is on final rail - reverse train & it's path
-            // const trainOnFinalRail = train.finalRails.find(frail => {
-            //     if (frail.x === trainPosition.x && frail.y === trainPosition.y) {
-            //         if (frail.x !== train.lastReverse.x && frail.y !== train.lastReverse.y) {
-            //             train.lastReverse = frail;
-            //             return true;
-            //         }
-            //     }
-            // });
-
-            // if (trainOnFinalRail) {
-            //     // this[trainSelector].pauseFollow();
-            //     train.reversed = !train.reversed;
-            //     console.log(`train is on final rail (${trainOnFinalRail.x}, ${trainOnFinalRail.y}), reverse: ${train.reversed}`);
-            // }
         });
     }
 }
