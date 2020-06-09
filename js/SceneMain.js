@@ -899,6 +899,10 @@ class SceneMain extends Phaser.Scene {
                 semImg.flipX = true;
             }
 
+            if (sem.rotated) {
+                semImg.rotation = 2 * DEGREE_90;
+            }
+
             semImg.on('pointerdown', () => {
                 // switch semaphore state
                 var stateByType = semStateDefault;
