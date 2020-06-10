@@ -1205,7 +1205,7 @@ class SceneMain extends Phaser.Scene {
         st1.displayWidth = 16;
         st1.scaleY = st1.scaleX = 4 * st1.scaleX;
 
-        var st2 = this.add.sprite(gridToPx(45), gridToPx(29), 'st2');
+        var st2 = this.add.sprite(gridToPx(45), gridToPx(25), 'st2');
         st2.displayWidth = 32;
         st2.scaleY = st2.scaleX = 3.5 * st2.scaleX;
         st2.rotation = 2 * DEGREE_135;
