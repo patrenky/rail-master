@@ -1340,6 +1340,21 @@ class SceneMain extends Phaser.Scene {
                     }
                 });
 
+                // check if no train is stopped on child semafore
+                if (prevSem.state === semState.STOP) {
+                    const someTrainOnSemaphore = trains.find(train => {
+                        const trainPosition = { x: pxToGrid(this[train.trainSelector].x), y: pxToGrid(this[train.trainSelector].y) };
+
+                        if (prevSem.x === trainPosition.x && prevSem.y === trainPosition.y) {
+                            return true;
+                        }
+                    });
+
+                    if (someTrainOnSemaphore) {
+                        return;
+                    }
+                }
+
                 // decide child state
                 if (prevSem) {
                     let prevSemState = [];
@@ -1461,7 +1476,7 @@ class SceneMain extends Phaser.Scene {
                         boomImg.scaleX = boomImg.scaleY;
 
                         train.collides = true;
-                        
+
                         train.moveSpeed = 0;
                         otherTrain.moveSpeed = 0;
                     }
