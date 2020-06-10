@@ -1020,19 +1020,19 @@ const switchReverseRails = [
 const trains = [
     {
         trainSelector: 'ruske_drahy',
-        trainColor: hexColor.YELLOW,
+        trainColor: hexColor.ORANGE,
         startPosition: { x: 29, y: 24 },
         reversed: false,
     },
     {
         trainSelector: 'svicarske_drahy',
-        trainColor: hexColor.PURPLE,
+        trainColor: hexColor.BLUE,
         startPosition: { x: 54, y: 39 },
         reversed: true,
     },
     {
         trainSelector: 'slovenska_strela',
-        trainColor: hexColor.WHITE,
+        trainColor: hexColor.RED,
         startPosition: { x: 50, y: 18 },
         reversed: false,
     },
@@ -1108,6 +1108,7 @@ class SceneMain extends Phaser.Scene {
     }
 
     preload() {
+        // background tilemap
         this.load.image('tileset', 'assets/tileset.png');
         this.load.tilemapTiledJSON('tilemap', 'assets/tilemap.json');
 
@@ -1129,17 +1130,21 @@ class SceneMain extends Phaser.Scene {
         this.load.image('SORT_semRed', 'assets/semaphores/sem_move_blue.png');
         this.load.image('SORT_semGreen', 'assets/semaphores/sem_move_white.png');
 
-        // Switches
+        // switches
         this.load.image('swLeft', 'assets/switches/switch_left.png');
         this.load.image('swRight', 'assets/switches/switch_right.png');
 
-        this.load.image('rotate', 'assets/rotate.png');
-        this.load.image('warning', 'assets/warning.png');
-
-        // Stations
+        // station boards
         this.load.image('st1', 'assets/stations/kurim.png');
         this.load.image('st2', 'assets/stations/bityska.png');
 
+        // actions
+        this.load.image('rotate', 'assets/actions/rotate.png');
+        this.load.image('warning', 'assets/actions/warning.png');
+        this.load.image('checkbox_on', 'assets/actions/checkbox_on.png');
+        this.load.image('checkbox_off', 'assets/actions/checkbox_off.png');
+
+        // train
         this.load.spritesheet('train', "assets/train.png", {
             frameWidth: 256,
             frameHeight: 256,
@@ -1147,6 +1152,7 @@ class SceneMain extends Phaser.Scene {
             endFrame: 3
         });
 
+        // explosion
         this.load.spritesheet('boom', "assets/explosion.png", {
             frameWidth: 256,
             frameHeight: 256,
@@ -1162,28 +1168,6 @@ class SceneMain extends Phaser.Scene {
             rows: 40
         }
 
-        // add static images for stations
-        var st1 = this.add.sprite(gridToPx(20), gridToPx(7), 'st1');
-        st1.displayWidth = 16;
-        st1.scaleY = st1.scaleX = 4 * st1.scaleX;
-
-        var st2 = this.add.sprite(gridToPx(45), gridToPx(25), 'st2');
-        st2.displayWidth = 32;
-        st2.scaleY = st2.scaleX = 3.5 * st2.scaleX;
-        st2.rotation = -DEGREE_90;
-
-        const map = this.make.tilemap({ key: 'tilemap' });
-        const tileset = map.addTilesetImage('tileset', 'tileset');
-        map.createStaticLayer('Rails', tileset);
-        // map.createStaticLayer('Semaphores', tileset);
-        // map.createStaticLayer('Switches', tileset);
-
-        this.cameras.main.setBackgroundColor(hexColor.GREEN);
-
-        // show grid (dev/debug)
-        this.grid = new AlignGrid(gridConfig);
-        this.grid.showNumbers();
-
         // train animation
         this.anims.create({
             key: 'train_animation',
@@ -1198,6 +1182,47 @@ class SceneMain extends Phaser.Scene {
             frames: this.anims.generateFrameNames('boom', { start: 0, end: 4 }),
             frameRate: 3,
             repeat: -1
+        });
+
+        // render backgorund
+        const map = this.make.tilemap({ key: 'tilemap' });
+        const tileset = map.addTilesetImage('tileset', 'tileset');
+        map.createStaticLayer('Rails', tileset);
+        // map.createStaticLayer('Semaphores', tileset);
+        // map.createStaticLayer('Switches', tileset);
+
+        this.cameras.main.setBackgroundColor(hexColor.GREEN);
+
+        // show grid
+        this.grid = new AlignGrid(gridConfig);
+        this.grid.showNumbers();
+
+        // add static images for stations
+        const st1 = this.add.sprite(gridToPx(20), gridToPx(7), 'st1');
+        st1.displayWidth = 16;
+        st1.scaleY = st1.scaleX = 4 * st1.scaleX;
+
+        const st2 = this.add.sprite(gridToPx(45), gridToPx(25), 'st2');
+        st2.displayWidth = 32;
+        st2.scaleY = st2.scaleX = 3.5 * st2.scaleX;
+        st2.rotation = -DEGREE_90;
+
+        // game options - render switched paths
+        this.optionSwitches = this.add.sprite(gridToPx(2), gridToPx(2), 'checkbox_on').setInteractive({ useHandCursor: true });
+        this.optionSwitches.optionEnabled = true;
+        this.add.text(50, 35, 'Zobrazit smer vyhybiek', { fontFamily: 'Arial', fontSize: '12px' });
+
+        this.optionSwitches.on('pointerdown', () => {
+            this.optionSwitches.optionEnabled = !this.optionSwitches.optionEnabled;
+            this.optionSwitches.setTexture(this.optionSwitches.optionEnabled ? 'checkbox_on' : 'checkbox_off');
+
+            if (this.optionSwitches.optionEnabled) {
+                this.renderSwitchedPaths();
+            } else {
+                if (this.switchDebug) {
+                    this.switchDebug.destroy();
+                }
+            }
         });
 
         // render semaphores
@@ -1264,11 +1289,15 @@ class SceneMain extends Phaser.Scene {
                 });
 
                 // re-render paths
-                this.renderPaths();
+                if (this.optionSwitches.optionEnabled) {
+                    this.renderSwitchedPaths();
+                }
             });
         });
 
-        this.renderPaths();
+        if (this.optionSwitches.optionEnabled) {
+            this.renderSwitchedPaths();
+        }
     }
 
     switchSemaphoreState(semaphore, requiredState) {
@@ -1391,7 +1420,7 @@ class SceneMain extends Phaser.Scene {
         return nextMove;
     }
 
-    renderPaths() {
+    renderSwitchedPaths() {
         // display enabled paths based on switches
         if (this.switchDebug) {
             this.switchDebug.destroy();
@@ -1540,7 +1569,6 @@ class SceneMain extends Phaser.Scene {
 
                     if (trainOnDestination) {
                         const rotateImg = this.add.sprite(this[trainSelector].x, this[trainSelector].y, 'rotate').setInteractive({ useHandCursor: true });
-                        rotateImg.setTint(hexColor.RED);
 
                         rotateImg.on('pointerdown', () => {
                             train.reversed = !train.reversed;
