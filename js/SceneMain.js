@@ -10,6 +10,7 @@ const hexColor = {
 };
 
 const DEGREE_90 = 1.57;
+const DEGREE_135 = 2.36;
 const BASE_SPEED = 1;
 const SLOW_SPEED = 0.5;
 const BACKOFF_TIME = 50;
@@ -1172,6 +1173,10 @@ class SceneMain extends Phaser.Scene {
         this.load.image('rotate', 'assets/rotate.png');
         this.load.image('warning', 'assets/warning.png');
 
+        // Stations
+        this.load.image('st1', 'assets/stations/kurim.png');
+        this.load.image('st2', 'assets/stations/bityska.png');
+
         this.load.spritesheet('train', "assets/train.png", {
             frameWidth: 256,
             frameHeight: 256,
@@ -1193,6 +1198,17 @@ class SceneMain extends Phaser.Scene {
             cols: 60,
             rows: 40
         }
+
+        // add static images for stations
+
+        var st1 = this.add.sprite(gridToPx(20), gridToPx(7), 'st1');
+        st1.displayWidth = 16;
+        st1.scaleY = st1.scaleX = 4 * st1.scaleX;
+
+        var st2 = this.add.sprite(gridToPx(45), gridToPx(29), 'st2');
+        st2.displayWidth = 32;
+        st2.scaleY = st2.scaleX = 3.5 * st2.scaleX;
+        st2.rotation = 2 * DEGREE_135;
 
         const map = this.make.tilemap({ key: 'tilemap' });
         const tileset = map.addTilesetImage('tileset', 'tileset');
