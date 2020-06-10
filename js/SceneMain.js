@@ -407,6 +407,13 @@ const paths = [
         enabled: true,
         route: [
             { x: 11, y: 12 },
+            { x: 12, y: 12 },
+        ]
+    },
+    {
+        enabled: true,
+        route: [
+            { x: 12, y: 12 },
             { x: 14, y: 12 },
         ]
     },
@@ -414,6 +421,13 @@ const paths = [
         enabled: false,
         route: [
             { x: 11, y: 12 },
+            { x: 11, y: 13 },
+        ]
+    },
+    {
+        enabled: true,
+        route: [
+            { x: 11, y: 13 },
             { x: 11, y: 14 },
             { x: 14, y: 14 },
         ]
@@ -422,8 +436,22 @@ const paths = [
         enabled: false,
         route: [
             { x: 14, y: 12 },
+            { x: 14, y: 11 },
+        ]
+    },
+    {
+        enabled: true,
+        route: [
+            { x: 14, y: 11 },
             { x: 14, y: 10 },
             { x: 25, y: 10 },
+            { x: 25, y: 11 },
+        ]
+    },
+    {
+        enabled: false,
+        route: [
+            { x: 25, y: 11 },
             { x: 25, y: 12 },
         ]
     },
@@ -431,6 +459,20 @@ const paths = [
         enabled: true,
         route: [
             { x: 14, y: 12 },
+            { x: 15, y: 12 },
+        ]
+    },
+    {
+        enabled: true,
+        route: [
+            { x: 15, y: 12 },
+            { x: 24, y: 12 },
+        ]
+    },
+    {
+        enabled: true,
+        route: [
+            { x: 24, y: 12 },
             { x: 25, y: 12 },
         ]
     },
@@ -438,6 +480,20 @@ const paths = [
         enabled: true,
         route: [
             { x: 14, y: 14 },
+            { x: 15, y: 14 },
+        ]
+    },
+    {
+        enabled: true,
+        route: [
+            { x: 15, y: 14 },
+            { x: 24, y: 14 },
+        ]
+    },
+    {
+        enabled: true,
+        route: [
+            { x: 24, y: 14 },
             { x: 25, y: 14 },
         ]
     },
@@ -445,8 +501,22 @@ const paths = [
         enabled: false,
         route: [
             { x: 14, y: 14 },
+            { x: 14, y: 15 },
+        ]
+    },
+    {
+        enabled: true,
+        route: [
+            { x: 14, y: 15 },
             { x: 14, y: 16 },
             { x: 25, y: 16 },
+            { x: 25, y: 15 },
+        ]
+    },
+    {
+        enabled: false,
+        route: [
+            { x: 25, y: 15 },
             { x: 25, y: 14 },
         ]
     },
@@ -454,14 +524,28 @@ const paths = [
         enabled: true,
         route: [
             { x: 25, y: 12 },
+            { x: 26, y: 12 },
+        ]
+    },
+    {
+        enabled: true,
+        route: [
+            { x: 26, y: 12 },
             { x: 27, y: 12 },
         ]
     },
     {
-        enabled: false,
+        enabled: true,
         route: [
             { x: 25, y: 14 },
             { x: 27, y: 14 },
+            { x: 27, y: 13 },
+        ]
+    },
+    {
+        enabled: false,
+        route: [
+            { x: 27, y: 13 },
             { x: 27, y: 12 },
         ]
     },
@@ -478,6 +562,13 @@ const paths = [
         enabled: false,
         route: [
             { x: 37, y: 12 },
+            { x: 38, y: 12 },
+        ]
+    },
+    {
+        enabled: true,
+        route: [
+            { x: 38, y: 12 },
             { x: 39, y: 12 },
             { x: 39, y: 13 },
             { x: 41, y: 13 },
@@ -509,6 +600,13 @@ const paths = [
         enabled: true,
         route: [
             { x: 41, y: 11 },
+            { x: 42, y: 11 },
+        ]
+    },
+    {
+        enabled: true,
+        route: [
+            { x: 42, y: 11 },
             { x: 46, y: 11 },
             { x: 46, y: 15 },
         ]
@@ -526,6 +624,13 @@ const paths = [
         enabled: false,
         route: [
             { x: 41, y: 11 },
+            { x: 41, y: 10 },
+        ]
+    },
+    {
+        enabled: true,
+        route: [
+            { x: 41, y: 10 },
             { x: 41, y: 9 },
             { x: 48, y: 9 },
             { x: 48, y: 17 },
@@ -536,6 +641,13 @@ const paths = [
         enabled: true,
         route: [
             { x: 37, y: 12 },
+            { x: 37, y: 11 },
+        ]
+    },
+    {
+        enabled: true,
+        route: [
+            { x: 37, y: 11 },
             { x: 37, y: 4 },
             { x: 40, y: 4 },
         ]
@@ -544,6 +656,20 @@ const paths = [
         enabled: true,
         route: [
             { x: 40, y: 4 },
+            { x: 41, y: 4 },
+        ]
+    },
+    {
+        enabled: true,
+        route: [
+            { x: 41, y: 4 },
+            { x: 45, y: 4 },
+        ]
+    },
+    {
+        enabled: true,
+        route: [
+            { x: 45, y: 4 },
             { x: 46, y: 4 },
         ]
     },
@@ -551,8 +677,22 @@ const paths = [
         enabled: false,
         route: [
             { x: 40, y: 4 },
+            { x: 40, y: 5 },
+        ]
+    },
+    {
+        enabled: true,
+        route: [
+            { x: 40, y: 5 },
             { x: 40, y: 6 },
             { x: 46, y: 6 },
+            { x: 46, y: 5 },
+        ]
+    },
+    {
+        enabled: false,
+        route: [
+            { x: 46, y: 5 },
             { x: 46, y: 4 },
         ]
     },
@@ -579,28 +719,50 @@ const paths = [
         enabled: false,
         route: [
             { x: 54, y: 19 },
-            { x: 52, y: 19 },
+            { x: 53, y: 19 },
         ]
     },
     {
         enabled: true,
         route: [
             { x: 54, y: 19 },
+            { x: 54, y: 20 },
+        ]
+    },
+    {
+        enabled: true,
+        route: [
+            { x: 54, y: 20 },
             { x: 54, y: 21 },
         ]
     },
     {
         enabled: true,
         route: [
+            { x: 53, y: 19 },
             { x: 52, y: 19 },
+            { x: 52, y: 20 },
+        ]
+    },
+    {
+        enabled: true,
+        route: [
+            { x: 52, y: 20 },
             { x: 52, y: 21 },
+        ]
+    },
+    {
+        enabled: true,
+        route: [
+            { x: 50, y: 18 },
+            { x: 50, y: 21 },
+            { x: 51, y: 21 },
         ]
     },
     {
         enabled: false,
         route: [
-            { x: 50, y: 18 },
-            { x: 50, y: 21 },
+            { x: 51, y: 21 },
             { x: 52, y: 21 },
         ]
     },
@@ -608,28 +770,50 @@ const paths = [
         enabled: true,
         route: [
             { x: 52, y: 21 },
-            { x: 52, y: 24 },
+            { x: 52, y: 22 },
         ]
     },
     {
         enabled: true,
         route: [
+            { x: 52, y: 22 },
             { x: 52, y: 24 },
+        ]
+    },
+    {
+        enabled: false,
+        route: [
+            { x: 52, y: 24 },
+            { x: 51, y: 24 },
+        ]
+    },
+    {
+        enabled: true,
+        route: [
+            { x: 51, y: 24 },
             { x: 50, y: 24 },
             { x: 50, y: 36 },
         ]
     },
     {
-        enabled: false,
+        enabled: true,
         route: [
             { x: 52, y: 24 },
+            { x: 52, y: 25 },
+        ]
+    },
+    {
+        enabled: true,
+        route: [
+            { x: 52, y: 25 },
             { x: 52, y: 28 },
+            { x: 53, y: 28 },
         ]
     },
     {
         enabled: false,
         route: [
-            { x: 52, y: 28 },
+            { x: 53, y: 28 },
             { x: 54, y: 28 },
         ]
     },
@@ -637,13 +821,20 @@ const paths = [
         enabled: true,
         route: [
             { x: 54, y: 21 },
-            { x: 54, y: 24 },
+            { x: 54, y: 22 },
         ]
     },
     {
         enabled: true,
         route: [
-            { x: 54, y: 24 },
+            { x: 54, y: 22 },
+            { x: 54, y: 27 },
+        ]
+    },
+    {
+        enabled: true,
+        route: [
+            { x: 54, y: 27 },
             { x: 54, y: 28 },
         ]
     },
@@ -651,6 +842,13 @@ const paths = [
         enabled: false,
         route: [
             { x: 54, y: 21 },
+            { x: 55, y: 21 },
+        ]
+    },
+    {
+        enabled: true,
+        route: [
+            { x: 55, y: 21 },
             { x: 56, y: 21 },
         ]
     },
@@ -658,6 +856,13 @@ const paths = [
         enabled: false,
         route: [
             { x: 56, y: 21 },
+            { x: 56, y: 20 },
+        ]
+    },
+    {
+        enabled: true,
+        route: [
+            { x: 56, y: 20 },
             { x: 56, y: 18 },
         ]
     },
@@ -665,13 +870,27 @@ const paths = [
         enabled: true,
         route: [
             { x: 56, y: 21 },
+            { x: 56, y: 22 },
+        ]
+    },
+    {
+        enabled: true,
+        route: [
+            { x: 56, y: 22 },
             { x: 56, y: 30 },
+        ]
+    },
+    {
+        enabled: true,
+        route: [
+            { x: 56, y: 30 },
+            { x: 55, y: 30 },
         ]
     },
     {
         enabled: false,
         route: [
-            { x: 56, y: 30 },
+            { x: 55, y: 30 },
             { x: 54, y: 30 },
         ]
     },
@@ -679,6 +898,13 @@ const paths = [
         enabled: true,
         route: [
             { x: 54, y: 28 },
+            { x: 54, y: 29 },
+        ]
+    },
+    {
+        enabled: true,
+        route: [
+            { x: 54, y: 29 },
             { x: 54, y: 30 },
         ]
     },
@@ -703,7 +929,7 @@ const switches = [
         x: 14,
         y: 12,
         reversed: false,
-        state: spriteDirection.LEFT,
+        state: spriteDirection.RIGHT,
         position: spritePosition.TL
     },
     {
@@ -718,21 +944,21 @@ const switches = [
         y: 12,
         reversed: true,
         state: spriteDirection.LEFT,
-        position: spritePosition.TL
+        position: spritePosition.TR
     },
     {
         x: 25,
         y: 14,
         reversed: true,
-        state: spriteDirection.LEFT,
-        position: spritePosition.BL
+        state: spriteDirection.RIGHT,
+        position: spritePosition.BR
     },
     {
         x: 27,
         y: 12,
         reversed: true,
-        state: spriteDirection.LEFT,
-        position: spritePosition.T
+        state: spriteDirection.RIGHT,
+        position: spritePosition.BR
     },
     {
         x: 37,
@@ -745,7 +971,7 @@ const switches = [
         x: 41,
         y: 11,
         reversed: false,
-        state: spriteDirection.LEFT,
+        state: spriteDirection.RIGHT,
         position: spritePosition.L
     },
     {
@@ -756,10 +982,17 @@ const switches = [
         position: spritePosition.T
     },
     {
+        x: 46,
+        y: 4,
+        reversed: true,
+        state: spriteDirection.RIGHT,
+        position: spritePosition.T
+    },
+    {
         x: 54,
         y: 19,
         reversed: false,
-        state: spriteDirection.RIGHT,
+        state: spriteDirection.LEFT,
         position: spritePosition.TL
     },
     {
@@ -773,7 +1006,7 @@ const switches = [
         x: 52,
         y: 24,
         reversed: false,
-        state: spriteDirection.LEFT,
+        state: spriteDirection.RIGHT,
         position: spritePosition.R
     },
     {
@@ -801,7 +1034,7 @@ const switches = [
         x: 54,
         y: 30,
         reversed: true,
-        state: spriteDirection.RIGHT,
+        state: spriteDirection.LEFT,
         position: spritePosition.BR
     },
 ];
