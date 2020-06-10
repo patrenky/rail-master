@@ -1,4 +1,5 @@
 const hexColor = {
+    WHITE: 0xFFFFFF,
     RED: 0xFF0000,
     BLUE: 0x2859B8,
     GREEN: 0x008000,
@@ -49,7 +50,7 @@ const semaphores = [
         reversed: false,
         rotated: false,
         face: spriteDirection.LEFT,
-        state: semState.GO,
+        state: semState.WARN,
         type: semType.PRE,
         position: spritePosition.R
     },
@@ -60,7 +61,7 @@ const semaphores = [
         rotated: false,
         previous: { x: 8, y: 20 },
         face: spriteDirection.LEFT,
-        state: semState.GO,
+        state: semState.STOP,
         type: semType.IN,
         position: spritePosition.R
     },
@@ -176,7 +177,7 @@ const semaphores = [
         reversed: true,
         rotated: false,
         face: spriteDirection.RIGHT,
-        state: semState.GO,
+        state: semState.STOP,
         type: semType.OUT,
         position: spritePosition.T
     },
@@ -186,7 +187,7 @@ const semaphores = [
         reversed: true,
         rotated: false,
         face: spriteDirection.RIGHT,
-        state: semState.GO,
+        state: semState.STOP,
         type: semType.OUT,
         position: spritePosition.T
     },
@@ -196,7 +197,7 @@ const semaphores = [
         reversed: true,
         rotated: false,
         face: spriteDirection.RIGHT,
-        state: semState.GO,
+        state: semState.STOP,
         type: semType.OUT,
         position: spritePosition.T
     },
@@ -206,7 +207,7 @@ const semaphores = [
         reversed: true,
         rotated: false,
         face: spriteDirection.RIGHT,
-        state: semState.GO,
+        state: semState.STOP,
         type: semType.OUT,
         position: spritePosition.T
     },
@@ -332,7 +333,7 @@ const semaphores = [
         rotated: false,
         previous: { x: 54, y: 37 },
         face: spriteDirection.LEFT,
-        state: semState.GO,
+        state: semState.STOP,
         type: semType.IN,
         position: spritePosition.R
     },
@@ -341,7 +342,7 @@ const semaphores = [
         y: 37,
         reversed: true,
         face: spriteDirection.LEFT,
-        state: semState.GO,
+        state: semState.WARN,
         type: semType.PRE,
         position: spritePosition.R
     },
@@ -1055,9 +1056,20 @@ const switchReverseRails = [
 const trains = [
     {
         trainSelector: 'ruske_drahy',
-        trainColor: hexColor.ORANGE,
+        trainColor: hexColor.YELLOW,
         startPosition: { x: 29, y: 24 },
-        startRotation: 90,
+        reversed: false,
+    },
+    {
+        trainSelector: 'svicarske_drahy',
+        trainColor: hexColor.PURPLE,
+        startPosition: { x: 54, y: 39 },
+        reversed: true,
+    },
+    {
+        trainSelector: 'slovenska_strela',
+        trainColor: hexColor.WHITE,
+        startPosition: { x: 50, y: 18 },
         reversed: false,
     },
 ];
@@ -1166,6 +1178,13 @@ class SceneMain extends Phaser.Scene {
             startFrame: 0,
             endFrame: 3
         });
+
+        this.load.spritesheet('boom', "assets/explosion.png", {
+            frameWidth: 256,
+            frameHeight: 256,
+            startFrame: 0,
+            endFrame: 4
+        });
     }
 
     create() {
@@ -1186,6 +1205,22 @@ class SceneMain extends Phaser.Scene {
         // show grid (dev/debug)
         this.grid = new AlignGrid(gridConfig);
         this.grid.showNumbers();
+
+        // train animation
+        this.anims.create({
+            key: 'train_animation',
+            frames: this.anims.generateFrameNames('train', { start: 0, end: 3 }),
+            frameRate: 3,
+            repeat: -1
+        });
+
+        // explosion animation
+        this.anims.create({
+            key: 'boom_animation',
+            frames: this.anims.generateFrameNames('boom', { start: 0, end: 4 }),
+            frameRate: 3,
+            repeat: -1
+        });
 
         // render semaphores
         semaphores.forEach((sem, idx) => {
@@ -1211,14 +1246,6 @@ class SceneMain extends Phaser.Scene {
                     this.switchSemaphoreState(sem);
                 });
             }
-        });
-
-        // train animation
-        this.anims.create({
-            key: 'train_animation',
-            frames: this.anims.generateFrameNames('train', { start: 0, end: 3 }),
-            frameRate: 3,
-            repeat: -1
         });
 
         // render trains and their paths
@@ -1408,6 +1435,24 @@ class SceneMain extends Phaser.Scene {
                 train.reversedDelay = BACKOFF_TIME;
                 train.reversed = !train.reversed;
             }
+
+            // check if train collides with other train
+            trains.forEach(otherTrain => {
+                const otherTrainPosition = { x: pxToGrid(this[otherTrain.trainSelector].x), y: pxToGrid(this[otherTrain.trainSelector].y) };
+
+                if (train.trainSelector !== otherTrain.trainSelector && !train.collides) {
+                    if (trainPosition.x === otherTrainPosition.x && trainPosition.y === otherTrainPosition.y) {
+                        const boomImg = this.add.sprite(gridToPx(trainPosition.x), gridToPx(trainPosition.y), 'boom').play('boom_animation');
+                        boomImg.displayHeight = 40;
+                        boomImg.scaleX = boomImg.scaleY;
+
+                        train.collides = true;
+                        
+                        train.moveSpeed = 0;
+                        otherTrain.moveSpeed = 0;
+                    }
+                }
+            });
 
             // if train is on rail where semaphore is placed
             const trainOnSemaphore = semaphores.find(sem => {
