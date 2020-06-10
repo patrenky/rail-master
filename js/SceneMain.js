@@ -395,7 +395,6 @@ const semaphores = [
 const paths = [
     // lavy prijazd
     {
-        enabled: true,
         route: [
             { x: 29, y: 24 },
             { x: 8, y: 24 },
@@ -405,28 +404,26 @@ const paths = [
     },
     // lave mesto
     {
-        enabled: true,
+        activated: true,
         route: [
             { x: 11, y: 12 },
             { x: 12, y: 12 },
         ]
     },
     {
-        enabled: true,
         route: [
             { x: 12, y: 12 },
             { x: 14, y: 12 },
         ]
     },
     {
-        enabled: false,
+        activated: false,
         route: [
             { x: 11, y: 12 },
             { x: 11, y: 13 },
         ]
     },
     {
-        enabled: true,
         route: [
             { x: 11, y: 13 },
             { x: 11, y: 14 },
@@ -434,14 +431,13 @@ const paths = [
         ]
     },
     {
-        enabled: false,
+        activated: false,
         route: [
             { x: 14, y: 12 },
             { x: 14, y: 11 },
         ]
     },
     {
-        enabled: true,
         route: [
             { x: 14, y: 11 },
             { x: 14, y: 10 },
@@ -450,63 +446,60 @@ const paths = [
         ]
     },
     {
-        enabled: false,
+        activated: false,
         route: [
             { x: 25, y: 11 },
             { x: 25, y: 12 },
         ]
     },
     {
-        enabled: true,
+        activated: true,
         route: [
             { x: 14, y: 12 },
             { x: 15, y: 12 },
         ]
     },
     {
-        enabled: true,
         route: [
             { x: 15, y: 12 },
             { x: 24, y: 12 },
         ]
     },
     {
-        enabled: true,
+        activated: true,
         route: [
             { x: 24, y: 12 },
             { x: 25, y: 12 },
         ]
     },
     {
-        enabled: true,
+        activated: true,
         route: [
             { x: 14, y: 14 },
             { x: 15, y: 14 },
         ]
     },
     {
-        enabled: true,
         route: [
             { x: 15, y: 14 },
             { x: 24, y: 14 },
         ]
     },
     {
-        enabled: true,
+        activated: true,
         route: [
             { x: 24, y: 14 },
             { x: 25, y: 14 },
         ]
     },
     {
-        enabled: false,
+        activated: false,
         route: [
             { x: 14, y: 14 },
             { x: 14, y: 15 },
         ]
     },
     {
-        enabled: true,
         route: [
             { x: 14, y: 15 },
             { x: 14, y: 16 },
@@ -515,28 +508,26 @@ const paths = [
         ]
     },
     {
-        enabled: false,
+        activated: false,
         route: [
             { x: 25, y: 15 },
             { x: 25, y: 14 },
         ]
     },
     {
-        enabled: true,
         route: [
             { x: 25, y: 12 },
             { x: 26, y: 12 },
         ]
     },
     {
-        enabled: true,
+        activated: true,
         route: [
             { x: 26, y: 12 },
             { x: 27, y: 12 },
         ]
     },
     {
-        enabled: true,
         route: [
             { x: 25, y: 14 },
             { x: 27, y: 14 },
@@ -544,7 +535,7 @@ const paths = [
         ]
     },
     {
-        enabled: false,
+        activated: false,
         route: [
             { x: 27, y: 13 },
             { x: 27, y: 12 },
@@ -552,7 +543,6 @@ const paths = [
     },
     // lave mesto - vyhybka k okruhu a nahor
     {
-        enabled: true,
         route: [
             { x: 27, y: 12 },
             { x: 37, y: 12 },
@@ -560,14 +550,13 @@ const paths = [
     },
     // k okruhu
     {
-        enabled: false,
+        activated: false,
         route: [
             { x: 37, y: 12 },
             { x: 38, y: 12 },
         ]
     },
     {
-        enabled: true,
         route: [
             { x: 38, y: 12 },
             { x: 39, y: 12 },
@@ -576,14 +565,12 @@ const paths = [
         ]
     },
     {
-        enabled: true,
         route: [
             { x: 41, y: 13 },
             { x: 41, y: 11 },
         ]
     },
     {
-        enabled: true,
         route: [
             { x: 41, y: 13 },
             { x: 41, y: 15 },
@@ -591,21 +578,19 @@ const paths = [
     },
     // maly okruh
     {
-        enabled: true,
         route: [
             { x: 41, y: 15 },
             { x: 46, y: 15 },
         ]
     },
     {
-        enabled: true,
+        activated: true,
         route: [
             { x: 41, y: 11 },
             { x: 42, y: 11 },
         ]
     },
     {
-        enabled: true,
         route: [
             { x: 42, y: 11 },
             { x: 46, y: 11 },
@@ -614,7 +599,6 @@ const paths = [
     },
     // velky okruh
     {
-        enabled: true,
         route: [
             { x: 41, y: 15 },
             { x: 41, y: 17 },
@@ -622,14 +606,13 @@ const paths = [
         ]
     },
     {
-        enabled: false,
+        activated: false,
         route: [
             { x: 41, y: 11 },
             { x: 41, y: 10 },
         ]
     },
     {
-        enabled: true,
         route: [
             { x: 41, y: 10 },
             { x: 41, y: 9 },
@@ -639,14 +622,13 @@ const paths = [
     },
     // k pravemu mestu
     {
-        enabled: true,
+        activated: true,
         route: [
             { x: 37, y: 12 },
             { x: 37, y: 11 },
         ]
     },
     {
-        enabled: true,
         route: [
             { x: 37, y: 11 },
             { x: 37, y: 4 },
@@ -654,35 +636,33 @@ const paths = [
         ]
     },
     {
-        enabled: true,
+        activated: true,
         route: [
             { x: 40, y: 4 },
             { x: 41, y: 4 },
         ]
     },
     {
-        enabled: true,
         route: [
             { x: 41, y: 4 },
             { x: 45, y: 4 },
         ]
     },
     {
-        enabled: true,
+        activated: true,
         route: [
             { x: 45, y: 4 },
             { x: 46, y: 4 },
         ]
     },
     {
-        enabled: false,
+        activated: false,
         route: [
             { x: 40, y: 4 },
             { x: 40, y: 5 },
         ]
     },
     {
-        enabled: true,
         route: [
             { x: 40, y: 5 },
             { x: 40, y: 6 },
@@ -691,14 +671,13 @@ const paths = [
         ]
     },
     {
-        enabled: false,
+        activated: false,
         route: [
             { x: 46, y: 5 },
             { x: 46, y: 4 },
         ]
     },
     {
-        enabled: true,
         route: [
             { x: 46, y: 4 },
             { x: 49, y: 4 },
@@ -707,7 +686,6 @@ const paths = [
         ]
     },
     {
-        enabled: true,
         route: [
             { x: 55, y: 2 },
             { x: 55, y: 7 },
@@ -717,28 +695,26 @@ const paths = [
     },
     // prave mesto
     {
-        enabled: false,
+        activated: false,
         route: [
             { x: 54, y: 19 },
             { x: 53, y: 19 },
         ]
     },
     {
-        enabled: true,
+        activated: true,
         route: [
             { x: 54, y: 19 },
             { x: 54, y: 20 },
         ]
     },
     {
-        enabled: true,
         route: [
             { x: 54, y: 20 },
             { x: 54, y: 21 },
         ]
     },
     {
-        enabled: true,
         route: [
             { x: 53, y: 19 },
             { x: 52, y: 19 },
@@ -746,14 +722,13 @@ const paths = [
         ]
     },
     {
-        enabled: true,
+        activated: false,
         route: [
             { x: 52, y: 20 },
             { x: 52, y: 21 },
         ]
     },
     {
-        enabled: true,
         route: [
             { x: 50, y: 18 },
             { x: 50, y: 21 },
@@ -761,35 +736,32 @@ const paths = [
         ]
     },
     {
-        enabled: false,
+        activated: true,
         route: [
             { x: 51, y: 21 },
             { x: 52, y: 21 },
         ]
     },
     {
-        enabled: true,
         route: [
             { x: 52, y: 21 },
             { x: 52, y: 22 },
         ]
     },
     {
-        enabled: true,
         route: [
             { x: 52, y: 22 },
             { x: 52, y: 24 },
         ]
     },
     {
-        enabled: false,
+        activated: true,
         route: [
             { x: 52, y: 24 },
             { x: 51, y: 24 },
         ]
     },
     {
-        enabled: true,
         route: [
             { x: 51, y: 24 },
             { x: 50, y: 24 },
@@ -797,14 +769,13 @@ const paths = [
         ]
     },
     {
-        enabled: true,
+        activated: false,
         route: [
             { x: 52, y: 24 },
             { x: 52, y: 25 },
         ]
     },
     {
-        enabled: true,
         route: [
             { x: 52, y: 25 },
             { x: 52, y: 28 },
@@ -812,105 +783,98 @@ const paths = [
         ]
     },
     {
-        enabled: false,
+        activated: false,
         route: [
             { x: 53, y: 28 },
             { x: 54, y: 28 },
         ]
     },
     {
-        enabled: true,
+        activated: true,
         route: [
             { x: 54, y: 21 },
             { x: 54, y: 22 },
         ]
     },
     {
-        enabled: true,
         route: [
             { x: 54, y: 22 },
             { x: 54, y: 27 },
         ]
     },
     {
-        enabled: true,
+        activated: true,
         route: [
             { x: 54, y: 27 },
             { x: 54, y: 28 },
         ]
     },
     {
-        enabled: false,
+        activated: false,
         route: [
             { x: 54, y: 21 },
             { x: 55, y: 21 },
         ]
     },
     {
-        enabled: true,
         route: [
             { x: 55, y: 21 },
             { x: 56, y: 21 },
         ]
     },
     {
-        enabled: false,
+        activated: false,
         route: [
             { x: 56, y: 21 },
             { x: 56, y: 20 },
         ]
     },
     {
-        enabled: true,
         route: [
             { x: 56, y: 20 },
             { x: 56, y: 18 },
         ]
     },
     {
-        enabled: true,
+        activated: true,
         route: [
             { x: 56, y: 21 },
             { x: 56, y: 22 },
         ]
     },
     {
-        enabled: true,
         route: [
             { x: 56, y: 22 },
             { x: 56, y: 30 },
         ]
     },
     {
-        enabled: true,
         route: [
             { x: 56, y: 30 },
             { x: 55, y: 30 },
         ]
     },
     {
-        enabled: false,
+        activated: false,
         route: [
             { x: 55, y: 30 },
             { x: 54, y: 30 },
         ]
     },
     {
-        enabled: true,
         route: [
             { x: 54, y: 28 },
             { x: 54, y: 29 },
         ]
     },
     {
-        enabled: true,
+        activated: true,
         route: [
             { x: 54, y: 29 },
             { x: 54, y: 30 },
         ]
     },
     {
-        enabled: true,
         route: [
             { x: 54, y: 30 },
             { x: 54, y: 39 },
@@ -1295,7 +1259,7 @@ class SceneMain extends Phaser.Scene {
                     const routeSelector = sw.reversed ? path.route.length - 1 : 0;
 
                     if (path.route[routeSelector].x === sw.x && path.route[routeSelector].y === sw.y) {
-                        path.enabled = !path.enabled;
+                        path.activated = !path.activated;
                     }
                 });
 
@@ -1384,7 +1348,7 @@ class SceneMain extends Phaser.Scene {
             const pathArray = train.reversed ? path.route.slice().reverse() : path.route;
 
             if (pathArray[0].x === pxToGrid(this[trainSelector].x) && pathArray[0].y === pxToGrid(this[trainSelector].y)) {
-                if (path.enabled) {
+                if (!path.hasOwnProperty('activated') || path.activated) {
                     return true;
                 }
             }
@@ -1428,19 +1392,22 @@ class SceneMain extends Phaser.Scene {
     }
 
     renderPaths() {
-        // display enabled/disabled paths (dev/debug)
-        const gdisabled = this.add.graphics();
-        gdisabled.lineStyle(2, hexColor.RED, 1);
+        // display enabled paths based on switches
+        if (this.switchDebug) {
+            this.switchDebug.destroy();
+        }
 
-        const genabled = this.add.graphics();
-        genabled.lineStyle(2, hexColor.BLUE, 1);
+        this.switchDebug = this.add.graphics();
+        this.switchDebug.lineStyle(2, hexColor.WHITE, 1);
 
         paths.forEach(path => {
-            const p = new Phaser.Curves.Path(gridToPx(path.route[0].x), gridToPx(path.route[0].y));
-            path.route.forEach(position => {
-                p.lineTo(gridToPx(position.x), gridToPx(position.y));
-            });
-            p.draw(path.enabled ? genabled : gdisabled, 128);
+            if (path.activated) {
+                const p = new Phaser.Curves.Path(gridToPx(path.route[0].x), gridToPx(path.route[0].y));
+                path.route.forEach(position => {
+                    p.lineTo(gridToPx(position.x), gridToPx(position.y));
+                });
+                p.draw(this.switchDebug, 128);
+            }
         });
     }
 
