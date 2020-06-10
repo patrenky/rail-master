@@ -171,8 +171,8 @@ const semaphores = [
         position: spritePosition.R
     },
     {
-        x: 44,
-        y: 8,
+        x: 42,
+        y: 9,
         reversed: true,
         rotated: false,
         face: spriteDirection.RIGHT,
@@ -181,8 +181,8 @@ const semaphores = [
         position: spritePosition.T
     },
     {
-        x: 44,
-        y: 10,
+        x: 42,
+        y: 11,
         reversed: true,
         rotated: false,
         face: spriteDirection.RIGHT,
@@ -191,8 +191,8 @@ const semaphores = [
         position: spritePosition.T
     },
     {
-        x: 44,
-        y: 14,
+        x: 42,
+        y: 15,
         reversed: true,
         rotated: false,
         face: spriteDirection.RIGHT,
@@ -201,8 +201,8 @@ const semaphores = [
         position: spritePosition.T
     },
     {
-        x: 44,
-        y: 16,
+        x: 42,
+        y: 17,
         reversed: true,
         rotated: false,
         face: spriteDirection.RIGHT,
@@ -478,55 +478,57 @@ const paths = [
         enabled: false,
         route: [
             { x: 37, y: 12 },
-            { x: 43, y: 12 },
+            { x: 39, y: 12 },
+            { x: 39, y: 13 },
+            { x: 41, y: 13 },
         ]
     },
     {
         enabled: true,
         route: [
-            { x: 43, y: 12 },
-            { x: 43, y: 10 },
+            { x: 41, y: 13 },
+            { x: 41, y: 11 },
         ]
     },
     {
         enabled: true,
         route: [
-            { x: 43, y: 12 },
-            { x: 43, y: 14 },
+            { x: 41, y: 13 },
+            { x: 41, y: 15 },
         ]
     },
     // maly okruh
     {
         enabled: true,
         route: [
-            { x: 43, y: 14 },
-            { x: 48, y: 14 },
+            { x: 41, y: 15 },
+            { x: 46, y: 15 },
         ]
     },
     {
         enabled: true,
         route: [
-            { x: 43, y: 10 },
-            { x: 48, y: 10 },
-            { x: 48, y: 14 },
+            { x: 41, y: 11 },
+            { x: 46, y: 11 },
+            { x: 46, y: 15 },
         ]
     },
     // velky okruh
     {
         enabled: true,
         route: [
-            { x: 43, y: 14 },
-            { x: 43, y: 16 },
-            { x: 50, y: 16 },
+            { x: 41, y: 15 },
+            { x: 41, y: 17 },
+            { x: 48, y: 17 },
         ]
     },
     {
         enabled: false,
         route: [
-            { x: 43, y: 10 },
-            { x: 43, y: 8 },
-            { x: 50, y: 8 },
-            { x: 50, y: 16 },
+            { x: 41, y: 11 },
+            { x: 41, y: 9 },
+            { x: 48, y: 9 },
+            { x: 48, y: 17 },
         ]
     },
     // k pravemu mestu
@@ -740,8 +742,8 @@ const switches = [
         position: spritePosition.B
     },
     {
-        x: 43,
-        y: 10,
+        x: 41,
+        y: 11,
         reversed: false,
         state: spriteDirection.LEFT,
         position: spritePosition.L
@@ -813,8 +815,8 @@ const destinationRails = [
 ];
 
 const switchReverseRails = [
-    { x: 48, y: 12 },
-    { x: 50, y: 12 },
+    { x: 46, y: 13 },
+    { x: 48, y: 13 },
 ];
 
 const trains = [
@@ -974,7 +976,6 @@ class SceneMain extends Phaser.Scene {
                 this[semSelector].on('pointerdown', () => {
                     // switch semaphore state
                     this.switchSemaphoreState(sem);
-                    console.log(sem);
                 });
             }
         });
