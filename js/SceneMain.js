@@ -26,6 +26,7 @@ const semState = {
     GO: 'GO',
     WARN: 'WARN',
     STOP: 'STOP',
+    GO_WARN: 'GO_WARN',
 };
 
 const spriteDirection = {
@@ -64,7 +65,35 @@ const semaphores = [
         face: spriteDirection.LEFT,
         state: semState.STOP,
         type: semType.IN,
-        position: spritePosition.R
+        position: spritePosition.R,
+        next: {
+            object: 'switch',
+            x: 11, y: 12,
+            'LEFT': {
+                object: 'switch',
+                x: 14, y: 12,
+                'LEFT': {
+                    object: 'semaphore',
+                    x: 23, y: 10
+                },
+                'RIGHT': {
+                    object: 'semaphore',
+                    x: 23, y: 12
+                }
+            },
+            'RIGHT': {
+                object: 'switch',
+                x: 14, y: 14,
+                'LEFT': {
+                    object: 'semaphore',
+                    x: 23, y: 14
+                },
+                'RIGHT': {
+                    object: 'semaphore',
+                    x: 23, y: 16
+                }
+            }
+        }
     },
     {
         x: 15,
@@ -82,6 +111,7 @@ const semaphores = [
         y: 12,
         reversed: true,
         rotated: false,
+        straight: true,
         previous: { x: 30, y: 12 },
         face: spriteDirection.RIGHT,
         state: semState.STOP,
@@ -126,6 +156,7 @@ const semaphores = [
         y: 12,
         reversed: false,
         rotated: false,
+        straight: true,
         previous: { x: 8, y: 16 },
         face: spriteDirection.LEFT,
         state: semState.STOP,
@@ -162,7 +193,35 @@ const semaphores = [
         face: spriteDirection.RIGHT,
         state: semState.STOP,
         type: semType.IN,
-        position: spritePosition.T
+        position: spritePosition.T,
+        next: {
+            object: 'switch',
+            x: 27, y: 12,
+            'LEFT': {
+                object: 'switch',
+                x: 25, y: 14,
+                'LEFT': {
+                    object: 'semaphore',
+                    x: 15, y: 16
+                },
+                'RIGHT': {
+                    object: 'semaphore',
+                    x: 15, y: 14
+                }
+            },
+            'RIGHT': {
+                object: 'switch',
+                x: 25, y: 12,
+                'LEFT': {
+                    object: 'semaphore',
+                    x: 15, y: 12
+                },
+                'RIGHT': {
+                    object: 'semaphore',
+                    x: 15, y: 10
+                }
+            }
+        }
     },
     {
         x: 34,
@@ -190,7 +249,19 @@ const semaphores = [
         face: spriteDirection.LEFT,
         state: semState.STOP,
         type: semType.IN,
-        position: spritePosition.R
+        position: spritePosition.R,
+        next: {
+            object: 'switch',
+            x: 40, y: 4,
+            'LEFT': {
+                object: 'semaphore',
+                x: 45, y: 4
+            },
+            'RIGHT': {
+                object: 'semaphore',
+                x: 45, y: 6
+            }
+        }
     },
     {
         x: 42,
@@ -250,7 +321,19 @@ const semaphores = [
         face: spriteDirection.RIGHT,
         state: semState.STOP,
         type: semType.IN,
-        position: spritePosition.T
+        position: spritePosition.T,
+        next: {
+            object: 'switch',
+            x: 46, y: 4,
+            'LEFT': {
+                object: 'semaphore',
+                x: 41, y: 6
+            },
+            'RIGHT': {
+                object: 'semaphore',
+                x: 41, y: 4
+            }
+        }
     },
     {
         x: 50,
@@ -288,6 +371,7 @@ const semaphores = [
         y: 22,
         reversed: true,
         rotated: false,
+        straight: true,
         previous: { x: 54, y: 33 },
         face: spriteDirection.LEFT,
         state: semState.STOP,
@@ -334,7 +418,39 @@ const semaphores = [
         face: spriteDirection.LEFT,
         state: semState.STOP,
         type: semType.IN,
-        position: spritePosition.L
+        position: spritePosition.L,
+        next: {
+            object: 'switch',
+            x: 54, y: 19,
+            'LEFT': {
+                object: 'switch',
+                x: 54, y: 21,
+                'LEFT': {
+                    object: 'semaphore',
+                    x: 54, y: 27
+                },
+                'RIGHT': {
+                    object: 'switch',
+                    x: 56, y: 21,
+                    'RIGHT': {
+                        object: 'semaphore',
+                        x: 56, y: 27
+                    }
+                }
+            },
+            'RIGHT': {
+                object: 'switch',
+                x: 52, y: 21,
+                'LEFT': {
+                    object: 'switch',
+                    x: 52, y: 24,
+                    'LEFT': {
+                        object: 'semaphore',
+                        x: 52, y: 27
+                    }
+                }
+            }
+        }
     },
     {
         x: 52,
@@ -352,6 +468,7 @@ const semaphores = [
         y: 27,
         reversed: false,
         rotated: true,
+        straight: true,
         previous: { x: 54, y: 15 },
         face: spriteDirection.LEFT,
         state: semState.STOP,
@@ -378,7 +495,31 @@ const semaphores = [
         face: spriteDirection.LEFT,
         state: semState.STOP,
         type: semType.IN,
-        position: spritePosition.R
+        position: spritePosition.R,
+        next: {
+            object: 'switch',
+            x: 54, y: 30,
+            'LEFT': {
+                object: 'switch',
+                x: 54, y: 28,
+                'LEFT': {
+                    object: 'switch',
+                    x: 52, y: 24,
+                    'LEFT': {
+                        object: 'semaphore',
+                        x: 52, y: 22
+                    }
+                },
+                'RIGHT': {
+                    object: 'semaphore',
+                    x: 54, y: 22
+                }
+            },
+            'RIGHT': {
+                object: 'semaphore',
+                x: 56, y: 22
+            }
+        }
     },
     {
         x: 54,
@@ -394,6 +535,7 @@ const semaphores = [
         y: 4,
         reversed: true,
         rotated: false,
+        straight: true,
         previous: { x: 50, y: 2 },
         face: spriteDirection.RIGHT,
         state: semState.STOP,
@@ -416,6 +558,7 @@ const semaphores = [
         y: 4,
         reversed: false,
         rotated: false,
+        straight: true,
         previous: { x: 37, y: 6 },
         face: spriteDirection.LEFT,
         state: semState.STOP,
@@ -1114,6 +1257,8 @@ const getSemSprite = (semaphoreState, semaphoreType) => {
             return semaphoreType + '_semGreen';
         case (semState.WARN):
             return semaphoreType + '_semYellow';
+        case (semState.GO_WARN):
+            return semaphoreType + '_semGreenWarn';
         default:
             return semaphoreType + '_semRed';
     }
@@ -1155,7 +1300,7 @@ class SceneMain extends Phaser.Scene {
         this.load.image('IN_semYellow', 'assets/semaphores/sem_in_yellow.png');
         this.load.image('IN_semGreen', 'assets/semaphores/sem_in_green.png');
         // when the following OUT has green, but train has to go through a switch on a side rail
-        this.load.image('IN_semSwitch', 'assets/semaphores/sem_in_switch.png');
+        this.load.image('IN_semGreenWarn', 'assets/semaphores/sem_in_switch.png');
 
         // OUT
         this.load.image('OUT_semRed', 'assets/semaphores/sem_out_red.png');
@@ -1348,21 +1493,6 @@ class SceneMain extends Phaser.Scene {
         // if semaphore has previous semaphore, call switch recursively
         if (semaphore.previous) {
             if (semaphore.previous.x && semaphore.previous.y) {
-                // first find semaphores with same child and check if they are all green
-                let parentSems = 0;
-                let allGreen = true;
-
-                semaphores.forEach(paSem => {
-                    if (paSem.previous) {
-                        if (paSem.previous.x === semaphore.previous.x && paSem.previous.y === semaphore.previous.y) {
-                            parentSems++;
-                            if (paSem.state !== semState.GO) {
-                                allGreen = false
-                            }
-                        }
-                    }
-                });
-
                 // find child semaphore
                 const prevSem = semaphores.find(pSem => {
                     if (pSem.x === semaphore.previous.x && pSem.y === semaphore.previous.y) {
