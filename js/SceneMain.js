@@ -1530,27 +1530,11 @@ class SceneMain extends Phaser.Scene {
                     return;
                 }
 
-                // check if no train is stopped on child semafore
-                if (prevSem.state === semState.STOP) {
-                    const someTrainOnSemaphore = trains.find(train => {
-                        const trainPosition = { x: pxToGrid(this[train.trainSelector].x), y: pxToGrid(this[train.trainSelector].y) };
-
-                        if (prevSem.x === trainPosition.x && prevSem.y === trainPosition.y) {
-                            return true;
-                        }
-                    });
-
-                    if (someTrainOnSemaphore) {
-                        return;
-                    }
-                }
-
                 // if child semaphore is IN
                 if (prevSem.type === semType.IN) {
                     const nextOut = this.findNextOutSemaphore(prevSem.next);
 
                     if (!nextOut) {
-                        console.log("no next out?");
                         return;
                     } else {
                         switch (nextOut.state) {
