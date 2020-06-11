@@ -28,9 +28,9 @@ class AlignGrid {
     }
 
     // create a visual representation of the grid
-    show(a = 1) {
+    show(alpha) {
         this.graphics = this.scene.add.graphics();
-        this.graphics.lineStyle(1, this.gridColor, a);
+        this.graphics.lineStyle(1, this.gridColor, alpha);
 
         // this.graphics.beginPath();
         for (var i = 0; i < this.w; i += this.cw) {
@@ -44,8 +44,8 @@ class AlignGrid {
         this.graphics.strokePath();
     }
 
-    showNumbers() {
-        this.show();
+    showNumbers(alpha = 1) {
+        this.show(alpha);
         var n = 0;
         for (var i = 0; i < this.rows; i++) {
             for (var j = 0; j < this.cols; j++) {
@@ -54,6 +54,7 @@ class AlignGrid {
                         color: this.gridColor,
                         fontSize: '12px'
                     });
+                    numText.setAlpha(alpha);
                     numText.setOrigin(0.5, 0.5);
                     this.placeAt(j, i, numText);
                     n++;

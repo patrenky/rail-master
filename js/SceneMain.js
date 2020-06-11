@@ -13,6 +13,7 @@ const DEGREE_90 = 1.57;
 const BASE_SPEED = 1;
 const SLOW_SPEED = 0.5;
 const BACKOFF_TIME = 50;
+const TILE_WIDTH = 16;
 
 const semType = {
     PRE: 'PRE', // predzvest
@@ -324,7 +325,7 @@ const semaphores = [
         type: semType.PRE,
         position: spritePosition.L
     },
-        {
+    {
         x: 54,
         y: 15,
         reversed: false,
@@ -1080,15 +1081,9 @@ const trains = [
     },
 ];
 
-const gridToPx = grid_number => {
-    const tile_width = 16;
-    return (grid_number * tile_width + tile_width / 2);
-}
+const gridToPx = grid_number => (grid_number * TILE_WIDTH + TILE_WIDTH / 2);
 
-const pxToGrid = px => {
-    const tile_width = 16;
-    return Math.floor(px / tile_width);
-}
+const pxToGrid = px => Math.floor(px / TILE_WIDTH);
 
 const getSpriteCoords = (x, y, position) => {
     switch (position) {
@@ -1206,12 +1201,6 @@ class SceneMain extends Phaser.Scene {
     }
 
     create() {
-        const gridConfig = {
-            scene: this,
-            cols: 60,
-            rows: 40
-        }
-
         // train animation
         this.anims.create({
             key: 'train_animation',
@@ -1238,16 +1227,20 @@ class SceneMain extends Phaser.Scene {
         this.cameras.main.setBackgroundColor(hexColor.GREEN);
 
         // show grid
-        this.grid = new AlignGrid(gridConfig);
-        this.grid.showNumbers();
+        this.grid = new AlignGrid({
+            scene: this,
+            cols: 60,
+            rows: 40
+        });
+        this.grid.showNumbers(1);
 
         // add static images for stations
         const st1 = this.add.sprite(gridToPx(20), gridToPx(7), 'st1');
-        st1.displayWidth = 16;
+        st1.displayWidth = TILE_WIDTH;
         st1.scaleY = st1.scaleX = 4 * st1.scaleX;
 
         const st2 = this.add.sprite(gridToPx(45), gridToPx(25), 'st2');
-        st2.displayWidth = 32;
+        st2.displayWidth = 2 * TILE_WIDTH;
         st2.scaleY = st2.scaleX = 3.5 * st2.scaleX;
         st2.rotation = -DEGREE_90;
 
@@ -1275,7 +1268,7 @@ class SceneMain extends Phaser.Scene {
             const semPosition = getSpriteCoords(sem.x, sem.y, sem.position);
 
             this[semSelector] = this.add.sprite(gridToPx(semPosition.x), gridToPx(semPosition.y), getSemSprite(sem.state, sem.type));
-            this[semSelector].displayWidth = game.config.width / gridConfig.cols;
+            this[semSelector].displayWidth = TILE_WIDTH;
             this[semSelector].scaleY = this[semSelector].scaleX = 1.5 * this[semSelector].scaleX;
 
             if (sem.face === spriteDirection.RIGHT) {
@@ -1303,7 +1296,7 @@ class SceneMain extends Phaser.Scene {
             train.moveSpeed = BASE_SPEED;
 
             this[trainSelector] = this.add.sprite(gridToPx(train.startPosition.x), gridToPx(train.startPosition.y), 'train').play('train_animation');
-            this[trainSelector].displayHeight = game.config.height / gridConfig.rows * 2;
+            this[trainSelector].displayHeight = 2 * TILE_WIDTH;
             this[trainSelector].scaleX = this[trainSelector].scaleY;
             this[trainSelector].setTint(train.trainColor);
 
@@ -1315,7 +1308,7 @@ class SceneMain extends Phaser.Scene {
             const swPosition = getSpriteCoords(sw.x, sw.y, sw.position);
 
             const swImg = this.add.sprite(gridToPx(swPosition.x), gridToPx(swPosition.y), getSwitchSprite(sw.state)).setInteractive({ useHandCursor: true });
-            swImg.displayWidth = game.config.width / gridConfig.cols;
+            swImg.displayWidth = TILE_WIDTH;
             swImg.scaleY = swImg.scaleX;
 
             swImg.on('pointerdown', () => {
