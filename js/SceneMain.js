@@ -1482,6 +1482,32 @@ class SceneMain extends Phaser.Scene {
         }
     }
 
+    findNextOutSemaphore(next) {
+        if (next.object === 'switch') {
+            const currentSwitch = switches.find(sw => {
+                if (sw.x === next.x && sw.y === next.y) {
+                    return true;
+                }
+            });
+
+            if (currentSwitch.state && next[currentSwitch.state]) {
+                return this.findNextOutSemaphore(next[currentSwitch.state]);
+            }
+        } else if (next.object === 'semaphore') {
+            const currentSemaphore = semaphores.find(sem => {
+                if (sem.x === next.x && sem.y === next.y) {
+                    return true;
+                }
+            });
+
+            if (currentSemaphore) {
+                return currentSemaphore;
+            }
+        }
+
+        return null;
+    }
+
     switchSemaphoreState(semaphore, requiredState) {
         // console.log("switchSemaphoreState", semaphore.type, requiredState);
         const nextStates = requiredState ? [requiredState] : [semState.GO, semState.STOP];
@@ -1500,6 +1526,10 @@ class SceneMain extends Phaser.Scene {
                     }
                 });
 
+                if (!prevSem) {
+                    return;
+                }
+
                 // check if no train is stopped on child semafore
                 if (prevSem.state === semState.STOP) {
                     const someTrainOnSemaphore = trains.find(train => {
@@ -1515,23 +1545,49 @@ class SceneMain extends Phaser.Scene {
                     }
                 }
 
-                // decide child state
-                if (prevSem) {
-                    let prevSemState = [];
+                // if child semaphore is IN
+                if (prevSem.type === semType.IN) {
+                    const nextOut = this.findNextOutSemaphore(prevSem.next);
 
-                    if (semaphore.state === semState.GO) {
-                        if (allGreen) {
-                            prevSemState = semState.GO;
-                        } else {
-                            prevSemState = semState.WARN;
+                    if (!nextOut) {
+                        console.log("no next out?");
+                        return;
+                    } else {
+                        switch (nextOut.state) {
+                            case (semState.STOP):
+                                this.switchSemaphoreState(prevSem, semState.WARN);
+                                break;
+                            case (semState.GO):
+                                if (nextOut.straight) {
+                                    this.switchSemaphoreState(prevSem, semState.GO);
+                                } else {
+                                    this.switchSemaphoreState(prevSem, semState.GO_WARN);
+                                }
+                                break;
+                            default:
+                                return;
                         }
-                    } else if (semaphore.state === semState.WARN) {
-                        prevSemState = semState.GO;
-                    } else if (semaphore.state === semState.STOP) {
-                        prevSemState = semState.WARN;
                     }
+                }
 
-                    this.switchSemaphoreState(prevSem, prevSemState);
+                // decide others child semaphores state
+                else {
+                    switch (semaphore.state) {
+                        case (semState.GO):
+                            this.switchSemaphoreState(prevSem, semState.GO);
+                            break;
+                        case (semState.WARN):
+                            this.switchSemaphoreState(prevSem, semState.GO);
+                            break;
+                        case (semState.STOP):
+                            this.switchSemaphoreState(prevSem, semState.WARN);
+                            break;
+                        case (semState.GO_WARN):
+                            this.switchSemaphoreState(prevSem, semState.GO);
+                            break;
+                        default:
+                            return;
+                    }
                 }
             }
         }
