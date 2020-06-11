@@ -1428,7 +1428,7 @@ class SceneMain extends Phaser.Scene {
                 this[semSelector].setInteractive({ useHandCursor: true });
                 this[semSelector].on('pointerdown', () => {
                     // switch semaphore state
-                    this.switchSemaphoreState(sem);
+                    this.switchSemaphoreState(sem, [semState.GO, semState.STOP]);
                 });
             }
         });
@@ -1508,13 +1508,9 @@ class SceneMain extends Phaser.Scene {
         return null;
     }
 
-    switchSemaphoreState(semaphore, requiredState) {
-        // console.log("switchSemaphoreState", semaphore.type, requiredState);
-        const nextStates = requiredState ? [requiredState] : [semState.GO, semState.STOP];
-
-        semaphore.state = getNextState(nextStates, semaphore.state);
+    switchSemaphoreState(semaphore, nextState) {
+        semaphore.state = Array.isArray(nextState) ? getNextState(nextState, semaphore.state) : nextState;
         this[semaphore.semSelector].setTexture(getSemSprite(semaphore.state, semaphore.type));
-        // console.log(semaphore.state);
 
         // if semaphore has previous semaphore, call switch recursively
         if (semaphore.previous) {
@@ -1702,6 +1698,9 @@ class SceneMain extends Phaser.Scene {
                     case (semState.WARN):
                         train.moveSpeed = SLOW_SPEED;
                         break;
+                    case (semState.GO_WARN):
+                        train.moveSpeed = SLOW_SPEED;
+                        break;
                     case (semState.STOP):
                         if (train.stopDelay < 1) {
                             train.moveSpeed = 0;
@@ -1714,8 +1713,10 @@ class SceneMain extends Phaser.Scene {
 
             // switch semaphore to red when train pass through
             if (trainOnSemaphore && trainOnSemaphore.type !== semType.PRE && train.stopDelay < 1) {
-                train.stopDelay = BACKOFF_TIME;
-                this.switchSemaphoreState(trainOnSemaphore, semState.STOP);
+                if (train.reversed === trainOnSemaphore.reversed) {
+                    train.stopDelay = BACKOFF_TIME;
+                    this.switchSemaphoreState(trainOnSemaphore, semState.STOP);
+                }
             }
 
             // count and execute next move
