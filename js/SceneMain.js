@@ -70,9 +70,9 @@ const semaphores = [
         y: 10,
         reversed: true,
         rotated: false,
-        previous: { x: 32, y: 12 },
+        previous: { x: 30, y: 12 },
         face: spriteDirection.RIGHT,
-        state: semState.GO,
+        state: semState.STOP,
         type: semType.OUT,
         position: spritePosition.T
     },
@@ -81,9 +81,9 @@ const semaphores = [
         y: 12,
         reversed: true,
         rotated: false,
-        previous: { x: 32, y: 12 },
+        previous: { x: 30, y: 12 },
         face: spriteDirection.RIGHT,
-        state: semState.GO,
+        state: semState.STOP,
         type: semType.OUT,
         position: spritePosition.T
     },
@@ -92,9 +92,9 @@ const semaphores = [
         y: 14,
         reversed: true,
         rotated: false,
-        previous: { x: 32, y: 12 },
+        previous: { x: 30, y: 12 },
         face: spriteDirection.RIGHT,
-        state: semState.GO,
+        state: semState.STOP,
         type: semType.OUT,
         position: spritePosition.T
     },
@@ -103,9 +103,9 @@ const semaphores = [
         y: 16,
         reversed: true,
         rotated: false,
-        previous: { x: 32, y: 12 },
+        previous: { x: 30, y: 12 },
         face: spriteDirection.RIGHT,
-        state: semState.GO,
+        state: semState.STOP,
         type: semType.OUT,
         position: spritePosition.T
     },
@@ -116,7 +116,7 @@ const semaphores = [
         rotated: false,
         previous: { x: 8, y: 16 },
         face: spriteDirection.LEFT,
-        state: semState.GO,
+        state: semState.STOP,
         type: semType.OUT,
         position: spritePosition.B
     },
@@ -127,7 +127,7 @@ const semaphores = [
         rotated: false,
         previous: { x: 8, y: 16 },
         face: spriteDirection.LEFT,
-        state: semState.GO,
+        state: semState.STOP,
         type: semType.OUT,
         position: spritePosition.B
     },
@@ -138,7 +138,7 @@ const semaphores = [
         rotated: false,
         previous: { x: 8, y: 16 },
         face: spriteDirection.LEFT,
-        state: semState.GO,
+        state: semState.STOP,
         type: semType.OUT,
         position: spritePosition.B
     },
@@ -149,26 +149,46 @@ const semaphores = [
         rotated: false,
         previous: { x: 8, y: 16 },
         face: spriteDirection.LEFT,
-        state: semState.GO,
+        state: semState.STOP,
         type: semType.OUT,
         position: spritePosition.B
     },
     {
-        x: 32,
+        x: 30,
+        y: 12,
+        reversed: true,
+        previous: { x: 34, y: 12 },
+        face: spriteDirection.RIGHT,
+        state: semState.STOP,
+        type: semType.IN,
+        position: spritePosition.T
+    },
+    {
+        x: 34,
         y: 12,
         reversed: true,
         face: spriteDirection.RIGHT,
-        state: semState.GO,
+        state: semState.WARN,
         type: semType.PRE,
         position: spritePosition.T
     },
     {
         x: 37,
-        y: 7,
+        y: 9,
         reversed: false,
         face: spriteDirection.LEFT,
-        state: semState.GO,
+        state: semState.WARN,
         type: semType.PRE,
+        position: spritePosition.R
+    },
+    {
+        x: 37,
+        y: 6,
+        previous: { x: 37, y: 9 },
+        reversed: false,
+        face: spriteDirection.LEFT,
+        state: semState.STOP,
+        type: semType.IN,
         position: spritePosition.R
     },
     {
@@ -212,12 +232,23 @@ const semaphores = [
         position: spritePosition.T
     },
     {
-        x: 51,
+        x: 53,
         y: 2,
         reversed: true,
         face: spriteDirection.RIGHT,
-        state: semState.GO,
+        state: semState.WARN,
         type: semType.PRE,
+        position: spritePosition.T
+    },
+    {
+        x: 50,
+        y: 2,
+        reversed: true,
+        rotated: false,
+        previous: { x: 53, y: 2 },
+        face: spriteDirection.RIGHT,
+        state: semState.STOP,
+        type: semType.IN,
         position: spritePosition.T
     },
     {
@@ -247,7 +278,7 @@ const semaphores = [
         rotated: false,
         previous: { x: 54, y: 33 },
         face: spriteDirection.LEFT,
-        state: semState.GO,
+        state: semState.STOP,
         type: semType.OUT,
         position: spritePosition.R
     },
@@ -258,7 +289,7 @@ const semaphores = [
         rotated: false,
         previous: { x: 54, y: 33 },
         face: spriteDirection.LEFT,
-        state: semState.GO,
+        state: semState.STOP,
         type: semType.OUT,
         position: spritePosition.R
     },
@@ -269,7 +300,7 @@ const semaphores = [
         rotated: false,
         previous: { x: 54, y: 33 },
         face: spriteDirection.LEFT,
-        state: semState.GO,
+        state: semState.STOP,
         type: semType.OUT,
         position: spritePosition.R
     },
@@ -285,12 +316,23 @@ const semaphores = [
     },
     {
         x: 54,
-        y: 13,
+        y: 11,
         reversed: false,
         rotated: true,
         face: spriteDirection.LEFT,
-        state: semState.GO,
+        state: semState.WARN,
         type: semType.PRE,
+        position: spritePosition.L
+    },
+        {
+        x: 54,
+        y: 15,
+        reversed: false,
+        rotated: true,
+        previous: { x: 54, y: 11 },
+        face: spriteDirection.LEFT,
+        state: semState.STOP,
+        type: semType.IN,
         position: spritePosition.L
     },
     {
@@ -298,9 +340,9 @@ const semaphores = [
         y: 27,
         reversed: false,
         rotated: true,
-        previous: { x: 54, y: 13 },
+        previous: { x: 54, y: 15 },
         face: spriteDirection.LEFT,
-        state: semState.GO,
+        state: semState.STOP,
         type: semType.OUT,
         position: spritePosition.L
     },
@@ -309,9 +351,9 @@ const semaphores = [
         y: 27,
         reversed: false,
         rotated: true,
-        previous: { x: 54, y: 13 },
+        previous: { x: 54, y: 15 },
         face: spriteDirection.LEFT,
-        state: semState.GO,
+        state: semState.STOP,
         type: semType.OUT,
         position: spritePosition.L
     },
@@ -320,9 +362,9 @@ const semaphores = [
         y: 27,
         reversed: false,
         rotated: true,
-        previous: { x: 54, y: 13 },
+        previous: { x: 54, y: 15 },
         face: spriteDirection.LEFT,
-        state: semState.GO,
+        state: semState.STOP,
         type: semType.OUT,
         position: spritePosition.L
     },
@@ -351,9 +393,9 @@ const semaphores = [
         y: 4,
         reversed: true,
         rotated: false,
-        previous: { x: 51, y: 2 },
+        previous: { x: 50, y: 2 },
         face: spriteDirection.RIGHT,
-        state: semState.GO,
+        state: semState.STOP,
         type: semType.OUT,
         position: spritePosition.T
     },
@@ -362,9 +404,9 @@ const semaphores = [
         y: 6,
         reversed: true,
         rotated: false,
-        previous: { x: 51, y: 2 },
+        previous: { x: 50, y: 2 },
         face: spriteDirection.RIGHT,
-        state: semState.GO,
+        state: semState.STOP,
         type: semType.OUT,
         position: spritePosition.T
     },
@@ -373,9 +415,9 @@ const semaphores = [
         y: 4,
         reversed: false,
         rotated: false,
-        previous: { x: 37, y: 7 },
+        previous: { x: 37, y: 6 },
         face: spriteDirection.LEFT,
-        state: semState.GO,
+        state: semState.STOP,
         type: semType.OUT,
         position: spritePosition.B
     },
@@ -384,9 +426,9 @@ const semaphores = [
         y: 6,
         reversed: false,
         rotated: false,
-        previous: { x: 37, y: 7 },
+        previous: { x: 37, y: 6 },
         face: spriteDirection.LEFT,
-        state: semState.GO,
+        state: semState.STOP,
         type: semType.OUT,
         position: spritePosition.B
     }
@@ -1117,6 +1159,8 @@ class SceneMain extends Phaser.Scene {
         this.load.image('IN_semRed', 'assets/semaphores/sem_in_red.png');
         this.load.image('IN_semYellow', 'assets/semaphores/sem_in_yellow.png');
         this.load.image('IN_semGreen', 'assets/semaphores/sem_in_green.png');
+        // when the following OUT has green, but train has to go through a switch on a side rail
+        this.load.image('IN_semSwitch', 'assets/semaphores/sem_in_switch.png');
 
         // OUT
         this.load.image('OUT_semRed', 'assets/semaphores/sem_out_red.png');
