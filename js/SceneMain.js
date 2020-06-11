@@ -1470,6 +1470,8 @@ class SceneMain extends Phaser.Scene {
                     }
                 });
 
+                this.rerenderSemaphoresOnSwitch(sw);
+
                 // re-render paths
                 if (this.optionSwitches.optionEnabled) {
                     this.renderSwitchedPaths();
@@ -1480,6 +1482,43 @@ class SceneMain extends Phaser.Scene {
         if (this.optionSwitches.optionEnabled) {
             this.renderSwitchedPaths();
         }
+    }
+
+    switchAffectSemaphore(next, updatedSwitch) {
+        if (next.object === 'switch') {
+            const currentSwitch = switches.find(sw => {
+                if (sw.x === next.x && sw.y === next.y) {
+                    return true;
+                }
+            });
+
+            if (currentSwitch.x === updatedSwitch.x && currentSwitch.y === updatedSwitch.y) {
+                return true;
+            }
+
+            if (currentSwitch.state && next[currentSwitch.state]) {
+                return this.switchAffectSemaphore(next[currentSwitch.state], updatedSwitch);
+            }
+        }
+
+        return false;
+    }
+
+    rerenderSemaphoresOnSwitch(updatedSwitch) {
+        // find which semaphores are affected with the switch
+        semaphores.forEach(sem => {
+            if (sem.type === semType.IN) {
+                const affectedSemaphore = this.switchAffectSemaphore(sem.next, updatedSwitch);
+
+                if (affectedSemaphore) {
+                    const nextOut = this.findNextOutSemaphore(sem.next);
+
+                    if (nextOut) {
+                        this.switchSemaphoreState(nextOut, nextOut.state);
+                    }
+                }
+            }
+        });
     }
 
     findNextOutSemaphore(next) {
