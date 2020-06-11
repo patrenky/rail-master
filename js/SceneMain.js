@@ -1377,7 +1377,6 @@ class SceneMain extends Phaser.Scene {
             cols: 60,
             rows: 40
         });
-        this.grid.showNumbers(1);
 
         // add static images for stations
         const st1 = this.add.sprite(gridToPx(20), gridToPx(7), 'st1');
@@ -1389,10 +1388,15 @@ class SceneMain extends Phaser.Scene {
         st2.scaleY = st2.scaleX = 3.5 * st2.scaleX;
         st2.rotation = -DEGREE_90;
 
+        // game options
+        const OPT_TEXT_MARGIN_TOP = 35;
+        const OPT_TEXT_MARGIN_RIGHT = 50;
+        const OPT_TEXT_CONFIG = { fontFamily: 'Arial', fontSize: '12px' };
+
         // game options - render switched paths
         this.optionSwitches = this.add.sprite(gridToPx(2), gridToPx(2), 'checkbox_on').setInteractive({ useHandCursor: true });
         this.optionSwitches.optionEnabled = true;
-        this.add.text(50, 35, 'Zobrazit smer vyhybiek', { fontFamily: 'Arial', fontSize: '12px' });
+        this.add.text(OPT_TEXT_MARGIN_RIGHT, OPT_TEXT_MARGIN_TOP, 'Zobrazit smer vyhybek', OPT_TEXT_CONFIG);
 
         this.optionSwitches.on('pointerdown', () => {
             this.optionSwitches.optionEnabled = !this.optionSwitches.optionEnabled;
@@ -1404,6 +1408,22 @@ class SceneMain extends Phaser.Scene {
                 if (this.switchDebug) {
                     this.switchDebug.destroy();
                 }
+            }
+        });
+
+        // game options - render grid
+        this.optionGrid = this.add.sprite(gridToPx(2), gridToPx(3), 'checkbox_off').setInteractive({ useHandCursor: true });
+        this.optionGrid.optionEnabled = false;
+        this.add.text(OPT_TEXT_MARGIN_RIGHT, OPT_TEXT_MARGIN_TOP + TILE_WIDTH, 'Zobrazit mrizku', OPT_TEXT_CONFIG);
+
+        this.optionGrid.on('pointerdown', () => {
+            this.optionGrid.optionEnabled = !this.optionGrid.optionEnabled;
+            this.optionGrid.setTexture(this.optionGrid.optionEnabled ? 'checkbox_on' : 'checkbox_off');
+
+            if (this.optionGrid.optionEnabled) {
+                this.grid.showNumbers();
+            } else {
+                this.grid.hide();
             }
         });
 

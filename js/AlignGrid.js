@@ -24,12 +24,13 @@ class AlignGrid {
         this.ch = this.h / this.rows;
 
         this.scene = config.scene;
-
+        this.numText = [];
     }
 
     // create a visual representation of the grid
     show(alpha) {
         this.graphics = this.scene.add.graphics();
+        this.graphics.setDepth(-10);
         this.graphics.lineStyle(1, this.gridColor, alpha);
 
         // this.graphics.beginPath();
@@ -57,6 +58,7 @@ class AlignGrid {
                     numText.setAlpha(alpha);
                     numText.setOrigin(0.5, 0.5);
                     this.placeAt(j, i, numText);
+                    this.numText.push(numText);
                     n++;
                     if (n >= this.cols) {
                         n = 1;
@@ -64,6 +66,11 @@ class AlignGrid {
                 }
             }
         }
+    }
+
+    hide() {
+        this.graphics.destroy();
+        this.numText.forEach(t => t.destroy());
     }
 
     // place an object in relation to the grid x, y position (centered)
