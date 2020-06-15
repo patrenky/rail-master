@@ -146,7 +146,7 @@ class SceneMain extends Phaser.Scene {
             this.anims.create({
                 key: `${semSwitchType}_animation`,
                 frames: this.anims.generateFrameNames(semSwitchType, { start: 0, end: 1 }),
-                frameRate: 3,
+                frameRate: 0.9,
                 repeat: -1
             });
         });
