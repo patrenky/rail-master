@@ -31,17 +31,8 @@ const getSpriteCoords = (x, y, position) => {
     }
 }
 
-const getSemSprite = (semaphoreState, semaphoreType) => {
-    switch (semaphoreState) {
-        case (semState.GO):
-            return semaphoreType + '_semGreen';
-        case (semState.WARN):
-            return semaphoreType + '_semYellow';
-        case (semState.GO_WARN):
-            return semaphoreType + '_semGreenWarn';
-        default:
-            return semaphoreType + '_semRed';
-    }
+const getSemSprite = (semaphoreType, semaphoreState) => {
+    return { sprite: semaphoreType + "_" + semaphoreState, animated: semaphoreState === semState.WARN_FLASH };
 }
 
 const getSwitchSprite = swState => {
@@ -70,29 +61,37 @@ class SceneMain extends Phaser.Scene {
     }
 
     preload() {
+        const semSpritesheetConfig = {
+            frameWidth: 32,
+            frameHeight: 32,
+            startFrame: 0,
+            endFrame: 1
+        };
+
         // background tilemap
         this.load.image('tileset', 'assets/tileset.png');
         this.load.tilemapTiledJSON('tilemap', 'assets/tilemap.json');
 
-        // Semaphores
-        // IN
-        this.load.image('IN_semRed', 'assets/semaphores/sem_in_red.png');
-        this.load.image('IN_semYellow', 'assets/semaphores/sem_in_yellow.png');
-        this.load.image('IN_semGreen', 'assets/semaphores/sem_in_green.png');
-        // when the following OUT has green, but train has to go through a switch on a side rail
-        this.load.image('IN_semGreenWarn', 'assets/semaphores/sem_in_switch.png');
+        // semaphores IN
+        this.load.image(`${semType.IN}_${semState.STOP}`, 'assets/semaphores/sem_in_red.png');
+        this.load.image(`${semType.IN}_${semState.WARN}`, 'assets/semaphores/sem_in_yellow.png');
+        this.load.image(`${semType.IN}_${semState.GO}`, 'assets/semaphores/sem_in_green.png');
+        this.load.image(`${semType.IN}_${semState.WARN_WARN}`, 'assets/semaphores/sem_in_switch_both.png');
+        this.load.spritesheet(`${semType.IN}_${semState.WARN_FLASH}`, 'assets/semaphores/sem_in_switch_dual.png', semSpritesheetConfig);
 
-        // OUT
-        this.load.image('OUT_semRed', 'assets/semaphores/sem_out_red.png');
-        this.load.image('OUT_semGreen', 'assets/semaphores/sem_out_green.png');
+        // semaphores OUT
+        this.load.image(`${semType.OUT}_${semState.STOP}`, 'assets/semaphores/sem_out_red.png');
+        this.load.image(`${semType.OUT}_${semState.GO}`, 'assets/semaphores/sem_out_green.png');
+        this.load.image(`${semType.OUT}_${semState.GO_WARN}`, 'assets/semaphores/sem_out_switch_green.png');
 
-        // PRE 
-        this.load.image('PRE_semYellow', 'assets/semaphores/sem_warn_yellow.png');
-        this.load.image('PRE_semGreen', 'assets/semaphores/sem_warn_green.png');
+        // semaphores PRE 
+        this.load.image(`${semType.PRE}_${semState.WARN}`, 'assets/semaphores/sem_warn_yellow.png');
+        this.load.image(`${semType.PRE}_${semState.GO}`, 'assets/semaphores/sem_warn_green.png');
+        this.load.spritesheet(`${semType.PRE}_${semState.WARN_FLASH}`, 'assets/semaphores/sem_warn_switch_dual.png', semSpritesheetConfig);
 
-        // SORT - used the same signalisation for algorithm switch (red=blue & green=white)
-        this.load.image('SORT_semRed', 'assets/semaphores/sem_move_blue.png');
-        this.load.image('SORT_semGreen', 'assets/semaphores/sem_move_white.png');
+        // semaphores SORT (red=blue, green=white)
+        this.load.image(`${semType.SORT}_${semState.STOP}`, 'assets/semaphores/sem_move_blue.png');
+        this.load.image(`${semType.SORT}_${semState.GO}`, 'assets/semaphores/sem_move_white.png');
 
         // switches
         this.load.image('swLeft', 'assets/switches/switch_left.png');
@@ -140,6 +139,16 @@ class SceneMain extends Phaser.Scene {
             frames: this.anims.generateFrameNames('boom', { start: 0, end: 4 }),
             frameRate: 3,
             repeat: -1
+        });
+
+        // blink animation for each semaphore type flash
+        [`${semType.IN}_${semState.WARN_FLASH}`, `${semType.PRE}_${semState.WARN_FLASH}`].forEach(semSwitchType => {
+            this.anims.create({
+                key: `${semSwitchType}_animation`,
+                frames: this.anims.generateFrameNames(semSwitchType, { start: 0, end: 1 }),
+                frameRate: 3,
+                repeat: -1
+            });
         });
 
         // render backgorund
@@ -211,8 +220,9 @@ class SceneMain extends Phaser.Scene {
         semaphores.forEach((sem, idx) => {
             const semSelector = sem.semSelector = `sem${idx}`;
             const semPosition = getSpriteCoords(sem.x, sem.y, sem.position);
+            const semaphoreSprite = getSemSprite(sem.type, sem.state)
 
-            this[semSelector] = this.add.sprite(gridToPx(semPosition.x), gridToPx(semPosition.y), getSemSprite(sem.state, sem.type));
+            this[semSelector] = this.add.sprite(gridToPx(semPosition.x), gridToPx(semPosition.y), semaphoreSprite.sprite);
             this[semSelector].displayWidth = TILE_WIDTH;
             this[semSelector].scaleY = this[semSelector].scaleX = 1.5 * this[semSelector].scaleX;
 
@@ -228,7 +238,11 @@ class SceneMain extends Phaser.Scene {
                 this[semSelector].setInteractive({ useHandCursor: true });
                 this[semSelector].on('pointerdown', () => {
                     // switch semaphore state
-                    this.switchSemaphoreState(sem, [semState.GO, semState.STOP]);
+                    if (sem.type === semType.OUT && !sem.straight) {
+                        this.switchSemaphoreState(sem, [semState.GO_WARN, semState.STOP]);
+                    } else {
+                        this.switchSemaphoreState(sem, [semState.GO, semState.STOP]);
+                    }
                 });
             }
         });
@@ -349,7 +363,17 @@ class SceneMain extends Phaser.Scene {
 
     switchSemaphoreState(semaphore, nextState) {
         semaphore.state = Array.isArray(nextState) ? getNextState(nextState, semaphore.state) : nextState;
-        this[semaphore.semSelector].setTexture(getSemSprite(semaphore.state, semaphore.type));
+        const semaphoreSprite = getSemSprite(semaphore.type, semaphore.state);
+        this[semaphore.semSelector].setTexture(semaphoreSprite.sprite);
+
+        // handle animation
+        if (this[semaphore.semSelector].anims) {
+            this[semaphore.semSelector].anims.stop();
+        }
+
+        if (semaphoreSprite.animated) {
+            this[semaphore.semSelector].play(`${semaphore.type}_${semaphore.state}_animation`);
+        }
 
         // if semaphore has previous semaphore, call switch recursively
         if (semaphore.previous) {
@@ -374,13 +398,18 @@ class SceneMain extends Phaser.Scene {
                     } else {
                         switch (nextOut.state) {
                             case (semState.STOP):
-                                this.switchSemaphoreState(prevSem, semState.WARN);
+                                if (nextOut.straight) {
+                                    this.switchSemaphoreState(prevSem, semState.WARN);
+                                } else {
+                                    this.switchSemaphoreState(prevSem, semState.WARN_WARN);
+                                }
                                 break;
                             case (semState.GO):
+                            case (semState.GO_WARN):
                                 if (nextOut.straight) {
                                     this.switchSemaphoreState(prevSem, semState.GO);
                                 } else {
-                                    this.switchSemaphoreState(prevSem, semState.GO_WARN);
+                                    this.switchSemaphoreState(prevSem, semState.WARN_FLASH);
                                 }
                                 break;
                             default:
@@ -389,8 +418,8 @@ class SceneMain extends Phaser.Scene {
                     }
                 }
 
-                // decide others child semaphores state
-                else {
+                // if child semaphore is PRE
+                else if (prevSem.type === semType.PRE) {
                     switch (semaphore.state) {
                         case (semState.GO):
                             this.switchSemaphoreState(prevSem, semState.GO);
@@ -401,8 +430,9 @@ class SceneMain extends Phaser.Scene {
                         case (semState.STOP):
                             this.switchSemaphoreState(prevSem, semState.WARN);
                             break;
-                        case (semState.GO_WARN):
-                            this.switchSemaphoreState(prevSem, semState.GO);
+                        case (semState.WARN_WARN):
+                        case (semState.WARN_FLASH):
+                            this.switchSemaphoreState(prevSem, semState.WARN_FLASH);
                             break;
                         default:
                             return;
@@ -531,13 +561,10 @@ class SceneMain extends Phaser.Scene {
             // train action based on semaphore state
             if (trainOnSemaphore && trainOnSemaphore.reversed === train.reversed) {
                 switch (trainOnSemaphore.state) {
-                    case (semState.GO):
-                        train.moveSpeed = BASE_SPEED;
-                        break;
                     case (semState.WARN):
-                        train.moveSpeed = SLOW_SPEED;
-                        break;
                     case (semState.GO_WARN):
+                    case (semState.WARN_WARN):
+                    case (semState.WARN_FLASH):
                         train.moveSpeed = SLOW_SPEED;
                         break;
                     case (semState.STOP):
@@ -546,6 +573,7 @@ class SceneMain extends Phaser.Scene {
                         }
                         break;
                     default:
+                        train.moveSpeed = BASE_SPEED;
                         break;
                 }
             }

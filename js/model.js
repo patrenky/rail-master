@@ -10,10 +10,10 @@ const hexColor = {
 };
 
 const semType = {
-    PRE: 'PRE', // predzvest
-    IN: 'IN', // vjezdove
-    OUT: 'OUT', // vyjezdove
-    SORT: 'SORT' // serazovaci
+    PRE: 'PRE',
+    IN: 'IN',
+    OUT: 'OUT',
+    SORT: 'SORT'
 }
 
 const semState = {
@@ -21,6 +21,8 @@ const semState = {
     WARN: 'WARN',
     STOP: 'STOP',
     GO_WARN: 'GO_WARN',
+    WARN_WARN: 'WARN_WARN',
+    WARN_FLASH: 'WARN_FLASH'
 };
 
 const spriteDirection = {
