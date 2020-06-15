@@ -361,7 +361,7 @@ class SceneMain extends Phaser.Scene {
         return null;
     }
 
-    switchSemaphoreState(semaphore, nextState) {
+    switchSemaphoreState(semaphore, nextState, skipPrevious) {
         semaphore.state = Array.isArray(nextState) ? getNextState(nextState, semaphore.state) : nextState;
         const semaphoreSprite = getSemSprite(semaphore.type, semaphore.state);
         this[semaphore.semSelector].setTexture(semaphoreSprite.sprite);
@@ -376,7 +376,7 @@ class SceneMain extends Phaser.Scene {
         }
 
         // if semaphore has previous semaphore, call switch recursively
-        if (semaphore.previous) {
+        if (semaphore.previous && !skipPrevious) {
             if (semaphore.previous.x && semaphore.previous.y) {
                 // find child semaphore
                 const prevSem = semaphores.find(pSem => {
@@ -476,13 +476,11 @@ class SceneMain extends Phaser.Scene {
         for (let i = 0; i < actualPath.length - 1; i++) {
             // horizontal match -> move on x
             if (actualPath[i].y === actualPosition.y && actualPath[i + 1].y === actualPosition.y) {
-                // console.log(`horizontal match ${gridToPx(actualPath[i + 1].x)} (${actualPath[i + 1].x}) - ${this[trainSelector].x} -> ${gridToPx(actualPath[i + 1].x) - this[trainSelector].x}`);
                 nextMove.x = gridToPx(actualPath[i + 1].x) - this[trainSelector].x;
             }
 
             // vertical match -> move on y
             else if (actualPath[i].x === actualPosition.x && actualPath[i + 1].x === actualPosition.x) {
-                // console.log(`vertical match ${gridToPx(actualPath[i + 1].y)} (${actualPath[i + 1].y}) - ${this[trainSelector].y} -> ${gridToPx(actualPath[i + 1].y) - this[trainSelector].y}`);
                 nextMove.y = gridToPx(actualPath[i + 1].y) - this[trainSelector].y;
             }
 
@@ -582,7 +580,7 @@ class SceneMain extends Phaser.Scene {
             if (trainOnSemaphore && trainOnSemaphore.type !== semType.PRE && train.stopDelay < 1) {
                 if (train.reversed === trainOnSemaphore.reversed) {
                     train.stopDelay = BACKOFF_TIME;
-                    this.switchSemaphoreState(trainOnSemaphore, semState.STOP);
+                    this.switchSemaphoreState(trainOnSemaphore, semState.STOP, trainOnSemaphore.type === semType.OUT);
                 }
             }
 
