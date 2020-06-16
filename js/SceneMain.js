@@ -496,6 +496,13 @@ class SceneMain extends Phaser.Scene {
         });
     }
 
+    removeSwitchWarning(trainSelector) {
+        if (this[trainSelector].wrongSwitch) {
+            this[trainSelector].wrongSwitch.destroy();
+            this[trainSelector].wrongSwitch = false;
+        }
+    }
+
     update() {
         // check whether trains collide with semaphores or final rails
         trains.forEach(train => {
@@ -589,6 +596,9 @@ class SceneMain extends Phaser.Scene {
                 const moveSign = nextMove.x / Math.abs(nextMove.x);
                 const moveStep = Math.abs(nextMove.x) > train.moveSpeed ? moveSign * train.moveSpeed : nextMove.x;
                 this[trainSelector].x += moveStep;
+
+                // remove warning if any
+                this.removeSwitchWarning(trainSelector);
             }
 
             // vertical move
@@ -607,6 +617,9 @@ class SceneMain extends Phaser.Scene {
                 const moveSign = nextMove.y / Math.abs(nextMove.y);
                 const moveStep = Math.abs(nextMove.y) > train.moveSpeed ? moveSign * train.moveSpeed : nextMove.y;
                 this[trainSelector].y += moveStep;
+
+                // remove warning if any
+                this.removeSwitchWarning(trainSelector);
             }
 
             // get next path
@@ -619,26 +632,32 @@ class SceneMain extends Phaser.Scene {
                     // if train is on destination rail
                     const trainOnDestination = destinationRails.find(rail => {
                         if (rail.x === trainPosition.x && rail.y === trainPosition.y) {
-                            if (!rail.shown) {
-                                rail.shown = true;
-                                return true;
-                            }
+                            return true;
                         }
                     });
 
                     if (trainOnDestination) {
-                        const rotateImg = this.add.sprite(this[trainSelector].x, this[trainSelector].y, 'rotate').setInteractive({ useHandCursor: true });
+                        // show only once
+                        if (!trainOnDestination.shown) {
+                            trainOnDestination.shown = true;
+                            const rotateImg = this.add.sprite(this[trainSelector].x, this[trainSelector].y, 'rotate').setInteractive({ useHandCursor: true });
 
-                        rotateImg.on('pointerdown', () => {
-                            train.reversed = !train.reversed;
-                            trainOnDestination.shown = false;
-                            rotateImg.destroy();
-                        });
+                            rotateImg.on('pointerdown', () => {
+                                train.reversed = !train.reversed;
+                                trainOnDestination.shown = false;
+                                rotateImg.destroy();
+                            });
+                        }
                     }
 
-                    // else train collide with wrong switched rails (or destination rail, but still not rotated)
+                    // else train collide with wrong switched rails
                     else {
-                        // console.log("wrong switched rails");
+                        // show only once
+                        if (!this[trainSelector].wrongSwitch) {
+                            const warnImg = this.add.sprite(this[trainSelector].x, this[trainSelector].y, 'warning');
+                            warnImg.scaleX = warnImg.scaleY = 1.5 * warnImg.scaleX;
+                            this[trainSelector].wrongSwitch = warnImg;
+                        }
                     }
                 }
             }
