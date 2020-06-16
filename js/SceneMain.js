@@ -1,7 +1,8 @@
 const DEGREE_90 = 1.57;
 const BASE_SPEED = 1;
 const SLOW_SPEED = 0.5;
-const BACKOFF_TIME = 50;
+const REVERSE_DELAY = 50;
+const STOP_DELAY = 10;
 const TILE_WIDTH = 16;
 
 const gridToPx = grid_number => (grid_number * TILE_WIDTH + TILE_WIDTH / 2);
@@ -520,7 +521,7 @@ class SceneMain extends Phaser.Scene {
             });
 
             if (trainOnReverseRail && train.reversedDelay < 1) {
-                train.reversedDelay = BACKOFF_TIME;
+                train.reversedDelay = REVERSE_DELAY;
                 train.reversed = !train.reversed;
             }
 
@@ -569,12 +570,16 @@ class SceneMain extends Phaser.Scene {
                 }
             }
 
-            // switch semaphore to red when train pass through
-            if (trainOnSemaphore && trainOnSemaphore.type !== semType.PRE && train.stopDelay < 1) {
+            // switch semaphore to red when train pass through after delay
+            if (trainOnSemaphore && trainOnSemaphore.type !== semType.PRE) {
                 if (train.reversed === trainOnSemaphore.reversed) {
-                    train.stopDelay = BACKOFF_TIME;
-                    this.switchSemaphoreState(trainOnSemaphore, semState.STOP);
+                    train.stopDelay = STOP_DELAY;
+                    train.stopSemaphore = trainOnSemaphore;
                 }
+            }
+
+            if (train.stopDelay === 0) {
+                this.switchSemaphoreState(train.stopSemaphore, semState.STOP);
             }
 
             // count and execute next move
